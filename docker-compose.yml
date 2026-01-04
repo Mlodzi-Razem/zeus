@@ -1,7 +1,18 @@
-version: "3.7"
 services:
+
   redis:
     image: redis:latest
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: zeus
+      POSTGRES_PASSWORD: zeus
+      POSTGRES_DB: zeus
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql
 
   dev:
     command: python manage.py runserver 0.0.0.0:8000
@@ -21,6 +32,7 @@ services:
       - PGPASSWORD
     depends_on:
       - redis
+      - db
 
   dev_celery:
     command: celery -A zeus.celery worker -l INFO --concurrency 1 --pool solo
