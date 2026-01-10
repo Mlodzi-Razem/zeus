@@ -1,6 +1,10 @@
 
 from django import template
 from django.utils.translation import gettext as _
+from django.utils.safestring import mark_safe
+import markdown
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
 
 register = template.Library()
 
@@ -63,3 +67,28 @@ def as_table(l_):
 
 
 as_dl.is_safe = True
+
+
+class RemoveHeadingsProcessor(Treeprocessor):
+    def run(self, root):
+        for element in list(root):
+            if element.tag in {"h1", "h2", "h3", "h4", "h5",}:
+                element.tag = "p"
+
+
+class RemoveHeadingsExtension(Extension):
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(
+            RemoveHeadingsProcessor(md),
+            "remove_headings",
+            priority=15,
+        )
+
+@register.filter
+def markdownify(value):
+    return mark_safe(
+        markdown.markdown(
+            value or "",
+            extensions=[RemoveHeadingsExtension()],
+        )
+    )
