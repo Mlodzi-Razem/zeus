@@ -2359,5 +2359,5 @@ class Application(HeliosModel):
     email = models.EmailField(max_length=255)
     group = models.CharField(max_length=1, choices=[("F", _("Female")), ("M", _("Male"))])
     presentation = models.TextField(blank=True)
-    #class Meta:
-    #    unique_together = ('election', 'email')
+    class Meta:
+        unique_together = ('election', 'email')
