@@ -5,6 +5,7 @@ Data Objects for Helios.
 Ben Adida
 (ben@adida.net)
 """
+import math
 import traceback
 import datetime
 import logging
@@ -236,13 +237,17 @@ class ElectionManager(models.Manager):
 
         return super(ElectionManager, self).get_queryset().filter(admins__in=[user])
 
-
-def _default_voting_starts_at(*args):
+def _default_applications_starts_at(*args):
     return datetime.datetime.now()
 
+def _default_applications_ends_at(*args):
+    return datetime.datetime.now() + timedelta(hours=12)
+
+def _default_voting_starts_at(*args):
+    return datetime.datetime.now() + timedelta(hours=24)
 
 def _default_voting_ends_at(*args):
-    return datetime.datetime.now() + timedelta(hours=12)
+    return datetime.datetime.now() + timedelta(hours=36)
 
 
 class Election(ElectionTasks, HeliosModel, ElectionFeatures):
@@ -301,6 +306,9 @@ class Election(ElectionTasks, HeliosModel, ElectionFeatures):
     deleted = models.BooleanField(default=False)
 
     frozen_at = models.DateTimeField(default=None, null=True)
+    applications_starts_at = models.DateTimeField(_("Applications starts at"), auto_now_add=False,default=_default_applications_starts_at, null=True, help_text=help.applications_starts_at)
+    applications_ends_at = models.DateTimeField(_("Applications stops at"), auto_now_add=False, default=_default_applications_ends_at, null=True, help_text=help.applications_ends_at)
+    number_of_seats = models.PositiveIntegerField(_("Number of seats"), default=1, help_text=help.number_of_seats)
     voting_starts_at = models.DateTimeField(_("Voting starts at"),
                                             auto_now_add=False,
                                             default=_default_voting_starts_at,
@@ -667,6 +675,92 @@ class Election(ElectionTasks, HeliosModel, ElectionFeatures):
 
     def get_module(self):
         return get_election_module(self)
+    
+    def poll_from_applications(self):
+        
+        if Poll.objects.filter(election=self, name=self.name).exists():
+            Poll.objects.filter(election=self, name=self.name).delete()
+
+        applications_confirmed = self.applications.filter(is_confirmed=True).count()
+        if self.applications.filter(is_confirmed=True).count() < 1:
+            raise ValueError("No confirmed applications")
+        if self.applications.filter(is_confirmed=True, group="M").count() > math.floor(self.number_of_seats/2)+1 or self.applications.filter(is_confirmed=True, group="F").count() > math.floor(self.number_of_seats/2)+1:
+            self.election_module = "stv"
+            self.departments = "Osoba kobieca\nOsoba niekobieca"
+            
+            answers = []
+            for application in self.applications.filter(is_confirmed=True):
+                answers.append( application.name + " " + application.surname + ": " + application.get_group_display() )
+
+            poll = Poll.objects.create(
+                election=self,
+                name = self.name,
+                eligibles_count = self.number_of_seats,
+            )
+
+            poll.questions_data = [{
+                "question": self.name,
+                "answers": answers,
+                "answers_file": None,
+                "shuffle_answers": True,
+                "eligibles": self.number_of_seats,
+                "has_department_limit": True,
+                "department_limit": math.floor(self.number_of_seats/2)+1,
+            }]
+
+            for i in range(0, self.applications.filter(is_confirmed=True).count()):
+                poll.questions_data[0]["answer_" + str(i)] = [str(self.applications.filter(is_confirmed=True)[i].name) + " " + str(self.applications.filter(is_confirmed=True)[i].surname), str(self.applications.filter(is_confirmed=True)[i].get_group_display())]
+
+            poll.questions = [{
+                    "question": "Questions choices",
+                    "choice_type": "stv",
+                    "tally_type": "stv",
+                    "result_type": "absolute",
+                    "answers": answers,
+            }]
+
+        else:
+            self.election_module = "simple"
+
+            answers = []
+            for application in self.applications.filter(is_confirmed=True):
+                answers.append(str(_("Do you accept choice of")) + " " + application.name + " " + application.surname + "?: 1-1, 0")
+                answers.append(str(_("Do you accept choice of")) + " " + application.name + " " + application.surname + "?: " + str(_("Yes")))
+                answers.append(str(_("Do you accept choice of")) + " " + application.name + " " + application.surname + "?: "+ str(_("No")))
+
+            questions = [{
+                'choice_type': 'stv',
+                'question': 'Questions choices',
+                'result_type': 'absolute',
+                'tally_type': 'stv',
+                'answers': answers
+            }]
+
+            questions_data = []
+            for application in self.applications.filter(is_confirmed=True):
+                questions_data.append({
+                    "question": str(_("Do you accept choice of")) + " " + application.name + " " + application.surname + "?",
+                    "answers": [str(_("Yes")), str(_("No"))],
+                    "min_answers": 1,
+                    "max_answers": 1,
+                    'choice_type': 'choice',
+                })
+            for i in range(0, len(questions_data)):
+                questions_data[i]["answer_0"] = str(_("Yes"))
+                questions_data[i]["answer_1"] = str(_("No"))
+
+            poll = Poll.objects.create(
+                election=self,
+                name = self.name,
+            )
+            poll.questions_data = questions_data
+            poll.questions = questions
+        poll.save(update_fields=["questions_data"])
+        poll.save(update_fields=["questions"])
+        self.save(update_fields=["election_module"])
+        self.save(update_fields=["departments"])
+
+        return poll
 
 
 class PollQuerySet(QuerySet):
@@ -2234,10 +2328,12 @@ class Trustee(HeliosModel, TrusteeFeatures):
 
             body = render_to_string("trustee_email.txt", context)
             subject = render_to_string("trustee_email_subject.txt", context)
+            mail_from = _(settings.DEFAULT_FROM_NAME)
+            mail_from += ' <%s>' % settings.DEFAULT_FROM_EMAIL
 
             send_mail(subject.replace("\n", ""),
                       body,
-                      settings.SERVER_EMAIL,
+                      mail_from,
                       ["%s <%s>" % (self.name, self.email)],
                       fail_silently=False)
             self.election.logger.info("Trustee %r login url send", self.email)
@@ -2247,3 +2343,21 @@ class Trustee(HeliosModel, TrusteeFeatures):
     @property
     def datatype(self):
         return self.election.datatype.replace('Election', 'Trustee')
+
+class Application(HeliosModel):
+
+    election = models.ForeignKey('Election', on_delete=models.CASCADE, related_name="applications")
+
+    uuid = models.CharField(max_length=50, unique=True, db_index=True, editable=False, default=uuid.uuid4)
+    is_confirmed = models.BooleanField(default=False)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    confirmed_at = models.DateTimeField(null=True, blank=True)
+
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
+    group = models.CharField(max_length=1, choices=[("F", _("Female")), ("M", _("Male"))])
+    presentation = models.TextField(blank=True)
+    #class Meta:
+    #    unique_together = ('election', 'email')

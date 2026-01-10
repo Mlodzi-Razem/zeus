@@ -34,7 +34,7 @@ from zeus.utils import undecalize, ordered_dict_prepend
 
 from django.core.validators import validate_email
 from zeus.election_modules import ELECTION_MODULES_CHOICES
-
+from helios.models import Application
 
 LOG_CHANGED_FIELDS = [
     "name",
@@ -50,7 +50,7 @@ INVALID_CHAR_MSG = _("%s is not a valid character.") % "%"
 
 
 def election_form_formfield_cb(f, **kwargs):
-    if f.name in ['voting_starts_at', 'voting_ends_at',
+    if f.name in ['applications_starts_at', 'applications_ends_at', 'voting_starts_at', 'voting_ends_at',
                   'voting_extended_until']:
         widget = JqSplitDateTimeWidget(attrs={'date_class': 'datepicker',
                                               'time_class': 'timepicker'})
@@ -81,6 +81,8 @@ class ElectionForm(forms.ModelForm):
         'name': ['edit_name'],
         'description': ['edit_description'],
         'election_module': ['edit_type'],
+        'applications_starts_at': [],
+        'applications_ends_at': [],
         'voting_starts_at': ['edit_voting_starts_at'],
         'voting_ends_at': ['edit_voting_ends_at'],
         'voting_extended_until': ['edit_voting_extended_until'],
@@ -93,8 +95,8 @@ class ElectionForm(forms.ModelForm):
 
     class Meta:
         model = Election
-        fields = ('trial', 'election_module', 'name', 'description',
-                  'departments', 'voting_starts_at', 'voting_ends_at',
+        fields = ('trial', 'election_module', 'name', 'description', 'number_of_seats',
+                  'departments', 'applications_starts_at', 'applications_ends_at', 'voting_starts_at', 'voting_ends_at',
                   'voting_extended_until',
                   'trustees', 'help_email', 'help_phone',
                   'communication_language', 'linked_polls',
@@ -167,6 +169,9 @@ class ElectionForm(forms.ModelForm):
 
     def clean(self):
         data = super(ElectionForm, self).clean()
+        self.clean_applications_dates(data.get('applications_starts_at'),
+                                data.get('applications_ends_at'),
+                                data.get('voting_starts_at'))
         self.clean_voting_dates(data.get('voting_starts_at'),
                                 data.get('voting_ends_at'),
                                 data.get('voting_extended_until'))
@@ -206,6 +211,14 @@ class ElectionForm(forms.ModelForm):
                 raise forms.ValidationError(_("Invalid voting dates"))
         if extension and extension <= ends:
             raise forms.ValidationError(_("Invalid voting extension date"))
+    
+    def clean_applications_dates(self, starts, ends, vote_starts):
+        if starts and ends and starts >= ends:
+            raise forms.ValidationError(
+                _("Applications end date must be after start date")
+            )
+        if ends and vote_starts and ends >= vote_starts:
+            raise forms.ValidationError(_("Application end must be before voting start"))
 
     def clean_trustees(self):
         trustees = self.cleaned_data.get('trustees')
@@ -1132,3 +1145,33 @@ class STVElectionForm(forms.Form):
         ret['schools'] = _schools
         ret['ballots'] = []
         return ret
+
+class ApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = [
+            'name',
+            'surname',
+            'email',
+            'group',
+            'presentation',
+        ]
+        labels = {
+            'name': _("First name"),
+            'surname': _("Last name"),
+            'email': _("Email address"),
+            'group': _("Group"),
+            'presentation': _("Presentation"),
+        }
+        def clean_email(self):
+            email = self.cleaned_data["email"]
+
+            allowed_domain = "example.edu"
+
+            if not email.lower().endswith(f"@{allowed_domain}"):
+                raise ValidationError(
+                    _("Only %(domain)s adresses are accepted"),
+                    params={"domain": allowed_domain},
+                )
+
+            return email

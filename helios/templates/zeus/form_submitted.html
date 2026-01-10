@@ -1,0 +1,13 @@
+{% extends "server_ui/templates/base.html" %}
+{% load i18n %}
+
+{% block tabs_menu %}
+{% include "zeus/_menu_partial.html" %}
+{% endblock %}
+
+{% block content %}
+<h4>{% trans "Thank you for signing up" %}</h4>
+
+<p>{% trans "Click the activation link sent to your email" %}</p>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load i18n %}
+
+{% trans "Thank you for submitting the application" %}
+
+{% trans "First name" %}: {{application.name}}
+{% trans "Last name" %}: {{application.surname}}
+{% trans "Group" %}: {{application.get_group_display}}
+{% trans "Presentation" %}: {{application.presentation}}
+
+{% trans "To submit your application please click the link below" %}
+
+{{ url }}
+
+{% trans "To delete your application please click the link below" %}
+
+{{ url_delete }}
+
+{% trans "Zeus Digital Elections" %}

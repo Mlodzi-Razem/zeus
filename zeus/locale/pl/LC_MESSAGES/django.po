@@ -366,6 +366,12 @@ msgstr "Kiedy głosowanie się kończy"
 msgid "When voting starts"
 msgstr "Kiedy głosowanie się zaczyna"
 
+msgid "When applications start to be accepted"
+msgstr "Kiedy zgłoszenia osób kandydackich zaczną być przyjmowane"
+
+msgid "When applications stop to be accepted"
+msgstr "Kiedy zgłoszenia osób kandydackich przestaną być przyjmowane"
+
 msgid "Voting extension date"
 msgstr "Data przedłużenia wyborów"
 
@@ -403,8 +409,29 @@ msgstr "Czy na pewno usunąć wybrane głosowanie?"
 msgid "Start"
 msgstr "Początek"
 
+msgid "Voting start"
+msgstr "Początek głosowania"
+
+msgid "Applications starts at"
+msgstr "Początek przyjmowania kandydatur"
+
 msgid "End"
 msgstr "Koniec"
+
+msgid "Voting end"
+msgstr "Koniec głosowania"
+
+msgid "Applications stops at"
+msgstr "Koniec przyjmowania kandydatur"
+
+msgid "Send application"
+msgstr "Wyślij zgłoszenie"
+
+msgid "Applications closed"
+msgstr "Przyjmowanie zgłoszeń zakończone"
+
+msgid "Presentations"
+msgstr "Latarniki"
 
 msgid "Extension"
 msgstr "Przełużenie"

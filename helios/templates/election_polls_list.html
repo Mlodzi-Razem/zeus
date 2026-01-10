@@ -131,6 +131,8 @@
 {% if election.feature_can_add_poll %}
 <a class="button" href="{% url "election_polls_add" election.uuid %}">
 {% trans "Add poll" %}</a>
+<a class="button" href="{% url "election_polls_generate" election.uuid %}">
+{% trans "Generate polls from applications" %}</a>
 {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,52 @@
+{% extends "server_ui/templates/base.html" %}
+{% load i18n %}
+
+{% block tabs_menu %}
+{% include "zeus/_menu_partial.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="columns twelve">
+    <h4>{% trans "Elections" %}</h4>
+    {% block present-elections-list %}
+        <table class="info-table reports-table" id="elections-table">
+            <thead>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Application start" %}</th>
+                <th>{% trans "Application end" %}</th>
+                <th>{% trans "Voting start" %}</th>
+                <th>{% trans "Voting end" %}</th>
+                <th>{% trans "Send application" %}</th>
+                <th>{% trans "Presentations" %}</th>
+            </thead>
+            <tbody>
+                {% for election in elections %}
+                    <tr>
+                        <td>{{election.name}}</td>
+                        <td>{{election.applications_starts_at|date:"Y-m-d H:i"}}</td>
+                        <td>{{election.applications_ends_at|date:"Y-m-d H:i"}}</td>
+                        <td>{{election.voting_starts_at|date:"Y-m-d H:i"}}</td>
+                        <td>{{election.voting_ends_at|date:"Y-m-d H:i"}}</td>
+                        <td>
+                            {% if election.applications_starts_at.timestamp <= now and now <= election.applications_ends_at.timestamp %}
+                                <a href="/elections/{{ election.uuid }}/form">
+                                    {% trans "Send application" %}
+                                </a>
+                            {% else %}
+                                {% trans "Applications closed" %}
+                            {% endif %}
+                        </td>                        
+                        <td><a href="/elections/{{election.uuid}}/presentations">{% trans "Presentations" %}</a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan=7>{% trans "No results found" %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}

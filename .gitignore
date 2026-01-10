@@ -30,3 +30,5 @@ htmlcov/
 env/
 .env
 db_data
+zeus/migrations
+zeus/helios/migrations

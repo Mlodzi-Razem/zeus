@@ -1,6 +1,6 @@
 
 from django.urls import include, re_path
-from zeus.views import poll, shared
+from zeus.views import poll, shared, site
 
 poll_patterns = [
     re_path(r'^get-randomness$', shared.get_randomness),
@@ -57,6 +57,7 @@ poll_patterns += [
 urlpatterns = [
     re_path(r'^$', poll.polls_list, name='election_polls_list'),
     re_path(r'^add$', poll.add_edit, name='election_polls_add'),
+    re_path(r'^generate$', site.generate, name='election_polls_generate'),
     re_path(r'^(?P<poll_uuid>[^/]+)/', include(poll_patterns)),
     re_path(r'^(?P<poll_uuid>[^/]+).json', poll.to_json,
         name='election_poll_json'),

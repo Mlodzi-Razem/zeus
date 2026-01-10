@@ -83,7 +83,7 @@ msgid "ELECTION_INIT_ERROR"
 msgstr "Błąd inicjalizacji wyborów"
 
 msgid "PAGE_TITLE"
-msgstr "Cyfrowe Wybory Zeus"
+msgstr "Cyfrowa Urna Wyborcza ZEUS"
 
 msgid "ENCRYPTION_PROCESS_FAILED"
 msgstr "Szyfrowanie nie powiodło się."

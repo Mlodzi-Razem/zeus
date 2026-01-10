@@ -1,0 +1,35 @@
+{% extends "server_ui/templates/base.html" %}
+{% load i18n helios_tags %}
+
+{% block tabs_menu %}
+{% include "zeus/_menu_partial.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="columns twelve">
+    <h4>{% trans "Presentations" %}</h4>
+
+    {% block present-elections-list %}
+        {% for application in election.applications.all %}
+            {% if application.is_confirmed %}
+                <h5>
+                    {{ application.name }} {{ application.surname }},
+                    {{ application.get_group_display }}
+                </h5>
+                <div class="presentation">
+                    {% if application.presentation %}
+                      {{ application.presentation|markdownify }}
+                    {% else %}
+                      {% trans "No presentation was submited" %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>{% trans "No confirmed presentations yet" %}</p>
+        {% endfor %}
+    {% endblock %}
+
+  </div>
+</div>
+{% endblock %}

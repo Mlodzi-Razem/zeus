@@ -27,8 +27,11 @@ from heliosauth.models import UserGroup
 from zeus.models import Institution
 from zeus.utils import email_is_valid
 from zeus.auth import ZeusUser
-
+from django.db import transaction
+from django.views.decorators.http import require_http_methods
 from zeus.stv_count_reports import stv_count_and_report
+from zeus.forms import ApplicationForm
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -174,6 +177,24 @@ def contact(request):
         'user': user
     })
 
+def elections_page(request):
+    user = request.zeususer
+    elections = Election.objects.filter(canceled_at__isnull=True, voting_ended_at__isnull=True, trial=False)
+    return render_template(request, "zeus/elections",{
+        'menu_active': 'elections',
+        'user': user,
+        'elections': elections,
+        'now': time(),
+    })
+
+def archive(request):
+    user = request.zeususer
+    elections = Election.objects.filter(canceled_at__isnull=True, voting_ended_at__isnull=False, trial=False)
+    return render_template(request, "zeus/archive",{
+        'menu_active': 'archive',
+        'user': user,
+        'elections': elections
+    })
 
 def stats(request):
     user = request.zeususer._user
@@ -365,3 +386,117 @@ def commit(request):
         errors='ignore'
     )
     return HttpResponse(output, content_type='text/plain; charset=utf-8')
+
+def results(request, election_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    return render_template(request, 'zeus/results', {
+        "election": election,
+        'menu_active': 'archive',
+    })
+
+@transaction.atomic
+@require_http_methods(["GET", "POST"])
+def form(request, election_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    now = time()
+
+    if not (election.applications_starts_at.timestamp() <= now <= election.applications_ends_at.timestamp()):
+        return render_template(request, "zeus/form_closed",
+            {
+                "menu_active": "elections",
+            },
+            status=403
+        )
+
+    if request.method == "GET":
+        form = ApplicationForm()
+    else:
+        form = ApplicationForm(request.POST)
+
+        if form.is_valid():
+            with transaction.atomic():
+                application = form.save(commit=False)
+                application.election = election
+                application.is_confirmed = False
+                application.save()
+                email_address = application.email
+                mail_subject = render_to_string('email/form_submit_subject.txt')
+                mail_body = render_to_string('email/form_submit_body.txt', {'url': request.build_absolute_uri(reverse("form_confirmed", args=[election.uuid, application.uuid])), "url_delete": request.build_absolute_uri(reverse("form_deleted", args=[election.uuid, application.uuid])), "application": application})
+                mail_from = _(settings.DEFAULT_FROM_NAME)
+                mail_from += ' <%s>' % settings.DEFAULT_FROM_EMAIL
+                send_mail(mail_subject, mail_body, mail_from, [email_address])
+                
+                return HttpResponseRedirect(
+                    reverse(
+                        "application-submitted",
+                        args=[election.uuid]
+                    )
+                )
+
+    context = {
+        'form': form,
+        'election': election,
+        'menu_active': 'elections',
+    }
+    return render_template(request, "zeus/form", context)
+
+def form_submitted(request, election_uuid):
+    return render_template(request, "zeus/form_submitted", {'menu_active': 'elections'})
+
+
+def presentations(request, election_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    return render_template(request, 'zeus/presentations',{
+        'election': election,
+        'menu_active': 'elections',
+    })
+
+def form_confirmed(request, election_uuid, application_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    now = time()
+
+    if not (election.applications_starts_at.timestamp() <= now <= election.applications_ends_at.timestamp()):
+        return render_template(request, "zeus/form_closed",
+            {
+                "menu_active": "elections",
+            },
+        )
+
+    application = election.applications.filter(uuid__in=[application_uuid]).first()
+
+    if not application.is_confirmed:
+        application.is_confirmed = True
+        application.save(update_fields=["is_confirmed"])
+        application.confirmed_at = timezone.now()
+        application.save(update_fields=["confirmed_at"])
+
+    return render_template(request, "zeus/form_confirmed",
+        {
+            'menu_active': 'elections',
+        }
+    )
+
+def form_deleted(request, election_uuid, application_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    now = time()
+
+    if not (election.applications_starts_at.timestamp() <= now <= election.applications_ends_at.timestamp()):
+        return render_template(request, "zeus/form_close",
+            {
+                "menu_active": "elections",
+            },
+        )
+    application = election.applications.filter(uuid__in=[application_uuid]).first()
+    if application:
+        application.delete()
+
+    return render_template(request, "zeus/form_delete",
+        {
+            'menu_active': 'elections',
+        }
+    )
+
+def generate(request, election_uuid):
+    election = Election.objects.filter(uuid__in=[election_uuid]).first()
+    election.poll_from_applications()
+    return HttpResponseRedirect(reverse("election_polls_list", args=[election_uuid]))

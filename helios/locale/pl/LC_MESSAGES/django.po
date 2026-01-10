@@ -1285,7 +1285,7 @@ msgid "Error saving form."
 msgstr "Błąd zapisania formularza."
 
 msgid "Home"
-msgstr "Dom"
+msgstr "Strona główna"
 
 msgid "Contact"
 msgstr "Kontakt"
@@ -1341,7 +1341,7 @@ msgstr ""
 "zaloguj się do swojego panelu sterowania i postępuj zgodnie z instrukcjami"
 
 msgid "Zeus Digital Elections"
-msgstr "Cyfrowe Wybory Zeus"
+msgstr "Cyfrowa Urna Wyborcza ZEUS"
 
 msgid "actions required, step"
 msgstr "wymagane działania, etap"
@@ -1668,3 +1668,99 @@ msgstr "Warunki wykorzystania"
 #, fuzzy
 #~ msgid "Add new poll"
 #~ msgstr "Προσθήκη κάλπης"
+
+msgid "Submit"
+msgstr "Wyślij"
+
+msgid "Thank you for signing up"
+msgstr "Dziękujemy za zgłoszenie"
+
+msgid "Click the activation link sent to your email"
+msgstr "Kliknij link aktywacyjny przesłany na twój adres email"
+
+msgid "To submit your application please click the link below"
+msgstr "Aby potwierdzić zgłoszenie, kliknij w link poniżej"
+
+msgid "To delete your application please click the link below"
+msgstr "Aby usunąć zgłoszenie, kliknij w link poniżej"
+
+msgid "No confirmed presentations yet"
+msgstr "Nie przesłano żadnego zgłoszenia"
+
+msgid "Your application was deleted"
+msgstr "Twoje zgłoszenie zostało usunięte"
+
+msgid "No presentation was submited"
+msgstr "Osoba kandydacka nie przesłała latarnika wyborczego"
+
+msgid "Your application was confirmed"
+msgstr "Twoje zgłoszenie zostało potwierdzone"
+
+msgid "Confirm your application"
+msgstr "Potwierdź swoje zgłoszenie"
+
+msgid "Thank you for submitting the application"
+msgstr "Dziękujemy za zgłoszenie"
+
+msgid "Female"
+msgstr "Osoba kobieca"
+
+msgid "Male"
+msgstr "Osoba niekobieca"
+
+msgid "Application for"
+msgstr "Formularz zgłoszeniowy -"
+
+msgid "First name"
+msgstr "Imię"
+
+msgid "Last name"
+msgstr "Nazwisko"
+
+msgid "Group"
+msgstr "Grupa"
+
+msgid "Presentation"
+msgstr "Latarnik"
+
+msgid "Applications starts at"
+msgstr "Początek przyjmowania kandydatur"
+
+msgid "Application start"
+msgstr "Początek przyjmowania kandydatur"
+
+msgid "Application end"
+msgstr "Koniec przyjmowania kandydatur"
+
+msgid "Elections"
+msgstr "Wybory"
+
+msgid "Archive"
+msgstr "Archiwum"
+
+msgid "Election results"
+msgstr "Wyniki wyborów do"
+
+msgid "Applications ends at"
+msgstr "Koniec przyjmowania kandydatur"
+
+msgid "The form does not accept changes"
+msgstr "Nie można zmienić kandydatur"
+
+msgid "Applications"
+msgstr "Zgłoszenia"
+
+msgid "Confirmed"
+msgstr "Potwierdzone"
+
+msgid "Number of seats"
+msgstr "Liczba mandatów"
+
+msgid "Number of seats to be filled by this election"
+msgstr "Liczba mandatów do obsadzenia w tych wyborach"
+
+msgid "Generate polls from applications"
+msgstr "Wygeneruj głosowania na podstawie zgłoszeń"
+
+msgid "Do you accept choice of"
+msgstr "Czy akceptujesz wybór osoby kandydackiej"

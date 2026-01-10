@@ -447,3 +447,11 @@ def remote_mix(request, election, mix_key):
 
     urls = [p.remote_mix_url for p in election.polls.all()]
     return HttpResponse(json.dumps(urls), content_type="application/json")
+
+@auth.election_admin_required
+@auth.election_view()
+def applications(request, election):
+    return render_template(request, 'zeus/applications',{
+        'election': election,
+        'menu_active': 'applications',
+    })

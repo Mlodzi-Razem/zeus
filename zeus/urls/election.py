@@ -2,7 +2,7 @@
 from django.urls import include, re_path
 
 from zeus.urls.trustee import election_patterns
-from zeus.views import poll, election
+from zeus.views import poll, election, site
 
 election_patterns = [
     re_path(r'^$', election.index, name="election_index"),
@@ -27,6 +27,13 @@ election_patterns = [
     re_path(r'^close_mixing$', election.close_mixing, name="election_close_mixing"),
     re_path(r'^mix/(?P<mix_key>[^/]+)$', election.remote_mix, name="election_remote_mix"),
     re_path(r'^email-voters$', poll.voters_email, name="election_voters_email"),
+    re_path(r'^results$', site.results, name="election_results"),
+    re_path(r'^form$', site.form, name="election_form"),
+    re_path(r'^form/(?P<application_uuid>[0-9a-f-]+)/$', site.form_confirmed, name="form_confirmed"),
+    re_path(r'^form/(?P<application_uuid>[0-9a-f-]+)/delete$', site.form_deleted, name="form_deleted"),
+    re_path(r'^applications/', election.applications, name='election_applications'),
+    re_path(r'^form/submitted$', site.form_submitted, name="application-submitted"),
+    re_path(r'^presentations$', site.presentations, name="election_presentations"),
     re_path(r'^results/(?P<shortname>.*)-(?P<language>.*)\.pdf$', election.results_file,
         name="election_pdf_results",
         kwargs={'ext': 'pdf'}),

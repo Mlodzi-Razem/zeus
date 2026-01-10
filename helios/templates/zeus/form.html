@@ -1,0 +1,17 @@
+{% extends "server_ui/templates/base.html" %}
+{% load i18n %}
+
+{% block tabs_menu %}
+{% include "zeus/_menu_partial.html" %}
+{% endblock %}
+
+{% block content %}
+<h4>{% trans "Application for" %} {{ election.name }}</h4>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button type="submit">{% trans "Submit" %}</button>
+</form>
+{% endblock %}
