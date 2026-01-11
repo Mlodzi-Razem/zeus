@@ -3,7 +3,7 @@ from django.urls import re_path
 from zeus.views import site
 
 urlpatterns = [
-    re_path(r'^$', site.elections_page, name='site_elections'),
+    re_path(r'^$', site.elections_page, name='home'),
     re_path(r'^commit/$', site.commit, name='commit'),
     re_path(r'^stvcount/$', site.stv_count, name='stv_count'),
     re_path(r'^terms/$', site.terms, name='terms'),
@@ -12,7 +12,6 @@ urlpatterns = [
     re_path(r'^faqs/trustee/$', site.faqs_trustee, name='faqs_trustee'),
     re_path(r'^resources/$', site.resources, name='site_resources'),
     re_path(r'^contact/$', site.contact, name='site_contact'),
-    re_path(r'^login/$', site.home, name='home'),
     re_path(r'^archive/$', site.archive, name='site_archive'),
     re_path(r'^stats/$', site.stats, name='site_stats'),
     re_path(r'^demo$', site.demo, name='site_demo'),

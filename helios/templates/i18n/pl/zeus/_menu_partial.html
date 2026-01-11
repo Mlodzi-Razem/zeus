@@ -1,9 +1,7 @@
 {% load i18n %}
 <dd id="" class="{% if menu_active == "elections" %}active{% endif %}"><a 
-  href="{% url "site_elections" %}">{% trans "Elections" %}</a></dd>
+  href="{% url "home" %}">{% trans "Elections" %}</a></dd>
 <dd id="" class="{% if menu_active == "archive" %}active{% endif %}"><a 
   href="{% url "site_archive" %}">{% trans "Archive" %}</a></dd>
 <dd id="" class="{% if menu_active == "contact" %}active{% endif %}"><a 
   href="{% url "site_contact" %}">{% trans "Contact" %}</a></dd>
-<dd id="" class="{% if menu_active == "home" %}active{% endif %}"><a
-  href="{% url "home" %}">{% trans "Login" %}</a></dd>
