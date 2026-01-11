@@ -2353,7 +2353,7 @@ class Application(HeliosModel):
 
     submitted_at = models.DateTimeField(auto_now_add=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
-
+    number = models.PositiveIntegerField(blank=True)
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)

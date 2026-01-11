@@ -12,6 +12,7 @@
             <thead>
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Surname" %}</th>
+                <th>{% trans "ID Number" %}</th>
                 <th>{% trans "Email" %}</th>
                 <th>{% trans "Group" %}</th>
                 <th>{% trans "Presentation" %}</th>
@@ -24,6 +25,7 @@
                     <tr>
                         <td>{{application.name}}</td>
                         <td>{{application.surname}}</td>
+                        <td>{{application.number}}</td>
                         <td>{{application.email}}</td>
                         <td>{{application.get_group_display}}</td>
                         <td>{{application.presentation}}</td>

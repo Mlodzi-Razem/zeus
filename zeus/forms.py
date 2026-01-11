@@ -1152,6 +1152,7 @@ class ApplicationForm(forms.ModelForm):
         fields = [
             'name',
             'surname',
+            'number',
             'email',
             'group',
             'presentation',
@@ -1159,6 +1160,7 @@ class ApplicationForm(forms.ModelForm):
         labels = {
             'name': _("First name"),
             'surname': _("Last name"),
+            'number': _("ID Number"),
             'email': _("Email address"),
             'group': _("Group"),
             'presentation': _("Presentation"),

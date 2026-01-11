@@ -1764,3 +1764,6 @@ msgstr "Wygeneruj głosowania na podstawie zgłoszeń"
 
 msgid "Do you accept choice of"
 msgstr "Czy akceptujesz wybór osoby kandydackiej"
+
+msgid "ID Number"
+msgstr "Numer legitymacji"
