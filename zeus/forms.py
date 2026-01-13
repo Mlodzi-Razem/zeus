@@ -1187,12 +1187,12 @@ class ApplicationForm(forms.ModelForm):
         return email
 
     def clean_number(self):
-    number = self.cleaned_data["number"]
+        number = self.cleaned_data["number"]
 
-    if Application.objects.filter(
-        election=self.initial.get("election"),
-        number=number
-    ).exists():
-        raise forms.ValidationError(_("This ID number is already used"))
+        if Application.objects.filter(
+            election=self.initial.get("election"),
+            number=number
+        ).exists():
+            raise forms.ValidationError(_("This ID number is already used"))
 
-    return number
+        return number
