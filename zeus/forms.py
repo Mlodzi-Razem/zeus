@@ -1168,7 +1168,7 @@ class ApplicationForm(forms.ModelForm):
         def clean_email(self):
             email = self.cleaned_data["email"]
 
-            allowed_domain = "example.edu"
+            allowed_domain = "mlodzirazem.org"
 
             if not email.lower().endswith(f"@{allowed_domain}"):
                 raise ValidationError(
