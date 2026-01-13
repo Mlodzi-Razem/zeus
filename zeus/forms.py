@@ -1147,6 +1147,7 @@ class STVElectionForm(forms.Form):
         return ret
 
 class ApplicationForm(forms.ModelForm):
+
     class Meta:
         model = Application
         fields = [
@@ -1165,15 +1166,33 @@ class ApplicationForm(forms.ModelForm):
             'group': _("Group"),
             'presentation': _("Presentation"),
         }
-        def clean_email(self):
-            email = self.cleaned_data["email"]
 
-            allowed_domain = "mlodzirazem.org"
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        allowed_domain = "mlodzirazem.org"
 
-            if not email.lower().endswith(f"@{allowed_domain}"):
-                raise ValidationError(
-                    _("Only %(domain)s adresses are accepted"),
-                    params={"domain": allowed_domain},
-                )
+        if not email.lower().endswith(f"@{allowed_domain}"):
+            raise ValidationError(
+                _("Only %(domain)s addresses are accepted"),
+                params={"domain": allowed_domain},
+            )
+        if self.election and Application.objects.filter(
+            election=self.election,
+            email=email
+        ).exists():
+            raise ValidationError(
+                _("You have already submitted an application for this election.")
+            )
 
-            return email
+        return email
+
+    def clean_number(self):
+    number = self.cleaned_data["number"]
+
+    if Application.objects.filter(
+        election=self.initial.get("election"),
+        number=number
+    ).exists():
+        raise forms.ValidationError(_("This ID number is already used"))
+
+    return number

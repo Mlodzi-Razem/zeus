@@ -412,32 +412,36 @@ def form(request, election_uuid):
         form = ApplicationForm()
     else:
         form = ApplicationForm(request.POST)
-
+            context = {
+            'form': form,
+            'election': election,
+            'menu_active': 'elections',
+        }
         if form.is_valid():
             with transaction.atomic():
-                application = form.save(commit=False)
-                application.election = election
-                application.is_confirmed = False
-                application.save()
-                email_address = application.email
-                mail_subject = render_to_string('email/form_submit_subject.txt')
-                mail_body = render_to_string('email/form_submit_body.txt', {'url': request.build_absolute_uri(reverse("form_confirmed", args=[election.uuid, application.uuid])), "url_delete": request.build_absolute_uri(reverse("form_deleted", args=[election.uuid, application.uuid])), "application": application})
-                mail_from = _(settings.DEFAULT_FROM_NAME)
-                mail_from += ' <%s>' % settings.DEFAULT_FROM_EMAIL
-                send_mail(mail_subject, mail_body, mail_from, [email_address])
-                
-                return HttpResponseRedirect(
-                    reverse(
-                        "application-submitted",
-                        args=[election.uuid]
-                    )
-                )
-
-    context = {
-        'form': form,
-        'election': election,
-        'menu_active': 'elections',
-    }
+                if form.is_valid():
+                    try:
+                        with transaction.atomic():
+                            application = form.save(commit=False)
+                            application.election = election
+                            application.save()
+                            mail_subject = render_to_string('email/form_submit_subject.txt')
+                            mail_body = render_to_string('email/form_submit_body.txt', {'url': request.build_absolute_uri(reverse("form_confirmed", args=[election.uuid, application.uuid])), "url_delete": request.build_absolute_uri(reverse("form_deleted", args=[election.uuid, application.uuid])), "application": application})
+                            mail_from = _(settings.DEFAULT_FROM_NAME)
+                            mail_from += ' <%s>' % settings.DEFAULT_FROM_EMAIL
+                            send_mail(mail_subject, mail_body, mail_from, [email_address])
+                            return HttpResponseRedirect(
+                                reverse(
+                                    "application-submitted",
+                                    args=[election.uuid]
+                                )
+                            )
+                    except IntegrityError:
+                        form.add_error(
+                            'email',
+                            _("You have already applied for this election.")
+                        )
+                        return render_template(request, "zeus/form", context)
     return render_template(request, "zeus/form", context)
 
 def form_submitted(request, election_uuid):

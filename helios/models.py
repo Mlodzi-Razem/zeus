@@ -2348,7 +2348,7 @@ class Application(HeliosModel):
 
     election = models.ForeignKey('Election', on_delete=models.CASCADE, related_name="applications")
 
-    uuid = models.CharField(max_length=50, unique=True, db_index=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_confirmed = models.BooleanField(default=False)
 
     submitted_at = models.DateTimeField(auto_now_add=True)
@@ -2360,4 +2360,7 @@ class Application(HeliosModel):
     group = models.CharField(max_length=1, choices=[("F", _("Female")), ("M", _("Male"))])
     presentation = models.TextField(blank=True)
     class Meta:
-        unique_together = ('election', 'email')
+        unique_together = (
+        ('election', 'email'),
+        ('election', 'number'),
+    )
