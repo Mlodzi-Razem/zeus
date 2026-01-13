@@ -412,7 +412,7 @@ def form(request, election_uuid):
         form = ApplicationForm()
     else:
         form = ApplicationForm(request.POST)
-            context = {
+        context = {
             'form': form,
             'election': election,
             'menu_active': 'elections',
