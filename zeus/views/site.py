@@ -408,15 +408,15 @@ def form(request, election_uuid):
             status=403
         )
 
+    context = {
+        'form': form,
+        'election': election,
+        'menu_active': 'elections',
+    }
     if request.method == "GET":
         form = ApplicationForm()
     else:
         form = ApplicationForm(request.POST)
-        context = {
-            'form': form,
-            'election': election,
-            'menu_active': 'elections',
-        }
         if form.is_valid():
             with transaction.atomic():
                 if form.is_valid():
