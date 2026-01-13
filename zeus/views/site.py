@@ -409,14 +409,14 @@ def form(request, election_uuid):
         )
 
     if request.method == "GET":
-        form = ApplicationForm()
+        form = ApplicationForm(election=election)
         context = {
             'form': form,
             'election': election,
             'menu_active': 'elections',
         }
     else:
-        form = ApplicationForm(request.POST)
+        form = ApplicationForm(request.POST, election=election)
         context = {
             'form': form,
             'election': election,

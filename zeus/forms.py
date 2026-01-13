@@ -1167,6 +1167,11 @@ class ApplicationForm(forms.ModelForm):
             'presentation': _("Presentation"),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.election = kwargs.pop('election', None)
+        super().__init__(*args, **kwargs)
+
+
     def clean_email(self):
         email = self.cleaned_data["email"]
         allowed_domain = "mlodzirazem.org"
