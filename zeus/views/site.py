@@ -432,8 +432,8 @@ def form(request, election_uuid):
                             application.save()
                             mail_subject = render_to_string('email/form_submit_subject.txt')
                             mail_body = render_to_string('email/form_submit_body.txt', {'url': request.build_absolute_uri(reverse("form_confirmed", args=[election.uuid, application.uuid])), "url_delete": request.build_absolute_uri(reverse("form_deleted", args=[election.uuid, application.uuid])), "application": application})
-                            mail_from = _(settings.DEFAULT_FROM_NAME)
-                            mail_from += ' <%s>' % settings.DEFAULT_FROM_EMAIL
+                            mail_from = _(settings.DEFAULT_FROM_NAME) + ' <%s>' % settings.DEFAULT_FROM_EMAIL
+                            email_address = application.name + " " + application.surname + ' <%s>' % application.email
                             send_mail(mail_subject, mail_body, mail_from, [email_address])
                             return HttpResponseRedirect(
                                 reverse(
