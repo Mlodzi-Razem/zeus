@@ -32,6 +32,7 @@ from django.views.decorators.http import require_http_methods
 from zeus.stv_count_reports import stv_count_and_report
 from zeus.forms import ApplicationForm
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -441,7 +442,7 @@ def form(request, election_uuid):
                                     args=[election.uuid]
                                 )
                             )
-                    except form.ValidationError:
+                    except ValidationError:
                         form.add_error(
                             'email',
                             _("You have already applied for this election.")
