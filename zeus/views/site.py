@@ -441,7 +441,7 @@ def form(request, election_uuid):
                                     args=[election.uuid]
                                 )
                             )
-                    except IntegrityError:
+                    except form.ValidationError:
                         form.add_error(
                             'email',
                             _("You have already applied for this election.")
