@@ -30,6 +30,10 @@ PAGE_WIDTH, PAGE_HEIGHT = A4
 
 
 def get_default_font():
+    font_path = '/usr/share/fonts/truetype/lato/Lato-Regular.ttf'
+    if os.path.isfile(font_path):
+        pdfmetrics.registerFont(TTFont('Lato', font_path))
+        return 'Lato'
     font_path = '/usr/share/fonts/truetype/open-sans/OpenSans-Regular.ttf'
     if os.path.isfile(font_path):
         pdfmetrics.registerFont(TTFont('OpenSans', font_path))
