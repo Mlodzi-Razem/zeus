@@ -76,7 +76,7 @@ msgid "No results found"
 msgstr "Nie znaleziono wyników"
 
 msgid "Zeus Electronic Voting"
-msgstr "Głosowanie elektroniczne Zeus"
+msgstr "Cyfrowa Urna Wyborcza Bebok"
 
 msgid "Form data have changed!"
 msgstr "Dane formularza zostały zmienione!"
@@ -85,19 +85,19 @@ msgid "Terms of use"
 msgstr "Warunki wykorzystania"
 
 msgid "You are logged in as election administrator"
-msgstr "Jesteś zalogowana jako administratorka wyborów"
+msgstr "Jesteś zalogowane jako osoba administrująca wybory"
 
 msgid "logout"
-msgstr "wyloguj się"
+msgstr "Wyloguj się"
 
 msgid "manage"
-msgstr "zarządzaj"
+msgstr "Zarządzaj"
 
 msgid "accounts"
-msgstr "konta"
+msgstr "Konta"
 
 msgid "change password"
-msgstr "zmień hasło"
+msgstr "Zmień hasło"
 
 msgid "You are logged in as voter"
 msgstr "Jesteś zalogowana jako osoba głosująca"

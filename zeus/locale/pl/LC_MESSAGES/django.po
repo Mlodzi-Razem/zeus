@@ -90,7 +90,7 @@ msgid "%s is not a valid character."
 msgstr "%s nie jest prawidłowym znakiem."
 
 msgid "Trustees"
-msgstr "Powierniczki"
+msgstr "Osoby powiernicze"
 
 msgid "Multiple mixnets"
 msgstr "Kilka sieci mieszających"
@@ -352,19 +352,18 @@ msgstr "Wybierz typ wyborów"
 
 msgid "TRUSTEES_LIST_HELP_TEXT"
 msgstr ""
-"Lista powierniczek, np.<br/>\n"
-"<br/>\n"
-"Janina Kowalska,janina.kowalska@gmail.com<br/>Partyjna Komisja Wyborcza,"
-"razem.pkw@gmail.com"
+"Lista osoób powierniczych, np.<br/>\n"
+"Janie Kowalskie,janie@kowalskie.eu<br/>"
+"Krajowa Komisja Wyborcza,kkw@mlodzirazem.org"
 
 msgid "Election description"
 msgstr "Opis wyborów"
 
 msgid "When voting ends"
-msgstr "Kiedy głosowanie się kończy"
+msgstr "Kiedy głosowanie się zakończy"
 
 msgid "When voting starts"
-msgstr "Kiedy głosowanie się zaczyna"
+msgstr "Kiedy głosowanie się rozpocznie"
 
 msgid "When applications start to be accepted"
 msgstr "Kiedy zgłoszenia osób kandydackich zaczną być przyjmowane"
@@ -377,18 +376,18 @@ msgstr "Data przedłużenia wyborów"
 
 msgid "Voters can contact this email for election support"
 msgstr ""
-"Głosujące mogą napisać na ten adres e-mail, aby uzyskać pomoc przy głosowaniu"
+"Osoby głosujące mogą napisać na ten adres e-mail, aby uzyskać pomoc przy głosowaniu"
 
 msgid "Voters can contact this phone for election support"
 msgstr ""
-"Głosujące mogą zadzwonić pod ten telefon, aby uzyskać pomoc przy głosowaniu"
+"Osoby głosujące mogą zadzwonić pod ten telefon, aby uzyskać pomoc przy głosowaniu"
 
 msgid "Whether or not to allow remote mixing"
 msgstr "Czy zezwolić na mieszanie na zewnętrznym serwerze"
 
 msgid "Require voters to accept specified terms in order to cast a vote."
 msgstr ""
-"Wymaga od wyborczyń zaakceptowania podanych warunków w celu oddania głosu."
+"Treść kluzuli, którą osoby głosujące muszą potwierdzić w celu oddania głosu."
 
 msgid ""
 "Confirm voter removal: {{ voter.voter_name}} {{ voter.voter_surname }} "
@@ -589,7 +588,7 @@ msgid "Blank: %d"
 msgstr "Pustych: %d"
 
 msgid "Zeus Elections - Poll Results"
-msgstr "Wybory Zeus - wyniki głosowania"
+msgstr "Wybory Bebok - wyniki głosowania"
 
 #, python-format
 msgid "Start: %(date)s"

@@ -34,7 +34,7 @@ msgid "Passwords don't match"
 msgstr "Hasła się różnią"
 
 msgid "Username"
-msgstr "Nazwa użytkowniczki"
+msgstr "Login"
 
 msgid "Password"
 msgstr "Hasło"
