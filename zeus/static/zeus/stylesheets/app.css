@@ -35,7 +35,7 @@ body {
 ========================= */
 
 a {
-    color: #870F57;
+    color: #720546;
     font-size: 26px;
     text-decoration: none;
     line-height: inherit;
@@ -48,7 +48,7 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    color: #870F57;
+    color: #720546;
     line-height: 1.25;
     margin-bottom: 16px;
 }
@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 { font-size: 36px; }
 h2 { font-size: 32px; }
 h3 { font-size: 28px; }
-h4 { font-size: 24px; }
+h4 { font-size: 24px; margin-top: 30px;}
 h5 { font-size: 20px; }
 h6 { font-size: 16px; }
 
@@ -76,7 +76,7 @@ h6 { font-size: 16px; }
   margin: 0;
   padding: 10px 0 14px 0;
   font-size: 22px;
-  color: #870F57;
+  color: #720546;
 }
 
 .tabs dd {
@@ -88,7 +88,7 @@ h6 { font-size: 16px; }
     padding: 10px 18px;
     font-size: 20px;
     font-weight: 700;
-    color: #870F57;
+    color: #720546;
     border-bottom: 3px solid transparent;
     transition: all 0.2s ease;
 }
@@ -98,17 +98,17 @@ h6 { font-size: 16px; }
 }
 
 .tabs dd.active a {
-    border-bottom-color: #870F57;
+    border-bottom-color: #720546;
     color: #611442;
 }
 
 /* =========================
    PRZYCISKI
 ========================= */
-
+button,
 .button {
-    background: #870F57;
-    border: 1px solid #4b0f33;
+    background: #720546;
+    border: 1px solid ##720546;
     margin: 4px;
     color: #fff;
     font-size: 14px;
@@ -122,7 +122,8 @@ h6 { font-size: 16px; }
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
-
+button:hover,
+button:focus,
 .button:hover,
 .button:focus {
     background: #6f174d;
@@ -130,6 +131,7 @@ h6 { font-size: 16px; }
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+button:active
 .button:active {
     color: #fff;
     transform: translateY(1px);
@@ -149,16 +151,6 @@ h6 { font-size: 16px; }
   border-radius: 12px;
 }
 
-.button.alert {
-  background: #b01258;
-  border-color: #6d0f3a;
-}
-
-.button.alert:hover,
-.button.alert:focus {
-  background: #8f1048;
-}
-
 .button.success {
   background: #2f8a62;
   border-color: #1f5f44;
@@ -175,7 +167,7 @@ h6 { font-size: 16px; }
 
 label {
   display: inline-block;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 900;
   color: #611442;
   margin: 6px 0;
@@ -185,6 +177,8 @@ input[type="text"],
 input[type="password"],
 input[type="email"],
 input[type="search"],
+input[type="number"],
+textarea,
 input.q,
 select {
   width: 100%;
@@ -204,8 +198,18 @@ input[type="email"]:focus,
 input[type="search"]:focus,
 input.q:focus,
 select:focus {
-  border-color: #870F57;
+  border-color: #720546;
   box-shadow: 0 0 0 3px rgba(135, 15, 87, 0.15);
+}
+
+input[type="checkbox"] {
+  height: 30px;
+  width: 30px;
+}
+
+textarea {
+  width: 100%;
+  height : 200px;
 }
 
 form.prettyform p {
@@ -324,7 +328,7 @@ table.election a,
 table.elections a {
   font-size: 14px;
   font-weight: 700;
-  color: #870F57;
+  color: #720546;
 }
 
 table.election a:hover,
@@ -339,7 +343,7 @@ table.elections td:last-child a {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 10px;
-  background: #870F57;
+  background: #720546;
   color: #fff;
   font-size: 13px;
   font-weight: 900;
@@ -390,7 +394,7 @@ table.elections td:last-child a:hover {
 
 .button.dropdown ul.no-hover li a:hover {
   background: #fbf4f8;
-  color: #870F57;
+  color: #720546;
 }
 
 /* =========================
@@ -447,7 +451,7 @@ table.reports-table thead th a {
 
 table.info-table thead th a:hover,
 table.reports-table thead th a:hover {
-  color: #870F57;
+  color: #720546;
 }
 
 td.alert {
@@ -489,7 +493,7 @@ td.official-field select {
     border: none;
     padding: 18px;
     border-radius: 8px;
-    color: #4b0f33;
+    color: ##720546;
 }
 
 .loginbox .panel a {
@@ -499,7 +503,9 @@ td.official-field select {
 .loginbox .panel.warning {
   background: #f6e6ef;
   border: 1px solid #e8c1d8;
-  border-left: 6px solid #870F57;
+  border-left: 6px solid #720546;
+  border-right: 6px solid #720546;
+
 }
 
 .loginbox .panel.warning em {
@@ -512,7 +518,6 @@ td.official-field select {
         INNE DUPERELE
 ========================= */
 #contentbody, #contentbody * {
-  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -527,7 +532,7 @@ td.official-field select {
   margin: 6px 0;
   font-size: 14px;
   font-weight: 700;
-  color: #870F57;
+  color: #720546;
 }
 
 #contentbody > a:hover {
