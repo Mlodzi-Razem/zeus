@@ -106,10 +106,12 @@ h6 { font-size: 16px; }
    PRZYCISKI
 ========================= */
 button,
+.show-audit-form,
 .button {
     background: #720546;
     border: 1px solid ##720546;
-    margin: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -122,6 +124,8 @@ button,
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
+.show-audit-form:focus,
+.show-audit-form:hover,
 button:hover,
 button:focus,
 .button:hover,
@@ -130,7 +134,7 @@ button:focus,
     transform: translateY(-1px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-
+.show-audit-form:active
 button:active
 .button:active {
     color: #fff;
@@ -146,19 +150,8 @@ button:active
 
 .button.medium {
   padding: 10px 18px;
-  margin: 15px;
   font-size: 13px;
   border-radius: 12px;
-}
-
-.button.success {
-  background: #2f8a62;
-  border-color: #1f5f44;
-}
-
-.button.success:hover,
-.button.success:focus {
-  background: #257353;
 }
 
 /* =========================
@@ -290,8 +283,7 @@ table.elections {
 }
 
 /* nagłówki tabeli */
-table.election thead th,
-table.elections thead th {
+th {
   background: #fbf4f8;
   color: #611442;
   font-size: 13px;
@@ -303,8 +295,7 @@ table.elections thead th {
 }
 
 /* komórki */
-table.election tbody td,
-table.elections tbody td {
+td {
   padding: 12px 14px;
   font-size: 14px;
   border-bottom: 1px solid #f2e2ec;
@@ -549,7 +540,6 @@ td.official-field select {
 #footer {
     border-top: 1px solid #f0d5e4;
     padding-top: 14px;
-    margin-top: 40px;
     font-size: 14px;
     color: #444;
 }
@@ -560,4 +550,120 @@ td.official-field select {
 
 #footer span[style*="float:right"] a {
   font-weight: 900;
+}
+
+.election-info {
+  font-size: 24px;
+  font-weight: 700;
+  color: #720546;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.issues-lists {
+  border: 1px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #720546;
+  color: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-actions {
+  margin-top: 30px;
+}
+
+li::marker {
+  content: "";
+}
+
+.reveal-modal {
+  position: fixed;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  border: 1px;
+  border-radius: 20px;
+  border-color: #720546;
+  padding: 20px;
+  width: 60%;
+  transform: translate(-50%, -50%) !important;
+  background: white;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.reveal-modal:target {
+  display: flex;
+}
+
+.reveal-modal > * {
+  color: white;
+}
+
+.reveal-modal > h3 {
+  color: #720546;
+}
+
+.trustee-entry {
+  margin 10px;
+  padding: 20px;
+  border: 1px;
+  border-radius: 20px;
+  background-color: #aa086c;
+}
+
+.trustee-entry > * {
+  color: white;
+}
+
+.trustee-actions {
+  display: flex;
+}
+
+.trustee-actions > * {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.collapse {
+  display: flex;
+}
+
+.election-actions {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.election-desc-toggle {
+  display: none;
+}
+
+.stv-choice > .button {
+  width: 100%;
+  text-align: left;
+}
+
+#stv_answer {
+  display: none;
+}
+
+.stv-choice > .selected {
+  background: green;
+}
+
+.stv-choice > .disabled {
+  background: gray;
+}
+
+.audit-form {
+  display: none;
+}
+
+.question-subtitle {
+  display: none;
 }
