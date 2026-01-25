@@ -20,22 +20,18 @@ The trustees below are responsible for the decryption of the ballots
         <span class="name">{{ t.name }}</span>
         {% if admin %}
             <br /><span style="font-size:0.8em; color:#aaa">{{ t.email }}</span>
+            <br/>
             {% if t.public_key_hash %}
-                <br />
                 <span class="hash-title">{% trans "Trustee election identifier" %}: </span>
                 <tt style="font-size:0.8em;">{{t.public_key_hash}}</tt>
                 {% if not t.last_verified_key_at %}
-                    <br /><br />
                     <span class="label alert">{% trans "Trustee key not verified" %}</span>
                 {% else %}
-                    <br />
-                    <br />
                     <span class="label success">
                         {% trans "key verified" %}
                     </span>
                     {% if t.partial_decryptions.all %}
-                        <br />
-                        <br />
+
                         {% if t.partial_decryptions.all.count == election.polls.all.count %}
                             <span class="label success">
                         {% else %}
@@ -47,7 +43,6 @@ The trustees below are responsible for the decryption of the ballots
                         </span>
                     {% else %}
                         {% if election.any_poll_feature_can_partial_decrypt %}
-                            <br /><br />
                             <span class="label alert">
                                 {% trans "No polls decrypted" %}
                             </span>
@@ -55,11 +50,8 @@ The trustees below are responsible for the decryption of the ballots
                     {% endif %}
                 {% endif %}
             {% else %}
-                <br />
-                <br />
                 <span class="label alert">{% trans "No trustee election key set" %}.</span>
             {% endif %}
-            <br /><br />
 
             <div class="trustee-actions">
             {% if election.feature_can_send_trustee_email %}
