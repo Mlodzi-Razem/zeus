@@ -1552,7 +1552,7 @@ msgid "To restart the counting process click "
 msgstr "Aby ponownie uruchomić proces liczenia, kliknij "
 
 msgid "Terms of use"
-msgstr "Warunki wykorzystania"
+msgstr "Regulamin Wyborów"
 
 #~ msgid "Mobile backend is not set for this election"
 #~ msgstr "Dla tych wyborów nie ustawiono silnika obsługi SMSów"

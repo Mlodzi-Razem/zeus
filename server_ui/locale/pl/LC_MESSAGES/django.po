@@ -82,7 +82,7 @@ msgid "Form data have changed!"
 msgstr "Dane formularza zostały zmienione!"
 
 msgid "Terms of use"
-msgstr "Warunki wykorzystania"
+msgstr "Regulamin wyborów"
 
 msgid "You are logged in as election administrator"
 msgstr "Jesteś zalogowane jako osoba administrująca wybory"
