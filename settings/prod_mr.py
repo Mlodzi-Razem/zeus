@@ -12,7 +12,7 @@ ELECTION_ADMINS = ADMINS
 MANAGERS = ADMINS
 
 DEFAULT_FROM_EMAIL = 'kkw@mlodzirazem.org'
-DEFAULT_FROM_NAME = 'Cyfrowa Urna Wyborcza ZEUS'
+DEFAULT_FROM_NAME = 'Cyfrowa Urna Wyborcza Bebok'
 SERVER_EMAIL = '%s <%s>' % (DEFAULT_FROM_NAME, DEFAULT_FROM_EMAIL)
 
 HELP_EMAIL_ADDRESS = 'kkw@mlodzirazem.org'

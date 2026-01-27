@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db_data:/var/lib/postgresql:rw
+      - ../zeus_db:/var/lib/postgresql:rw
 
   dev:
     command: python manage.py runserver 0.0.0.0:8000
