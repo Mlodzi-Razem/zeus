@@ -1,7 +1,20 @@
 {% load i18n %}
-<dd id="" class="{% if menu_active == "list" %}active{% endif %}">
-<a href="{% url "admin_home" %}">{% trans "Elections list" %}</a>
-</dd>
-<dd id="" class="{% if menu_active == "create" %}active{% endif %}">
-<a href="{% url "election_create" %}">{% trans "Create election" %}</a>
-</dd>
+<ul class="navbar-nav me-auto">
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/admin/' %}active{% endif %}" href="{% url 'admin_home' %}">{% trans "Elections list" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/elections/new' %}active{% endif %}" href="{% url 'election_create' %}">{% trans "Create election" %}</a>
+  </li>
+  <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Management
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'list_users' %}">Users list</a></li>
+            <li><a class="dropdown-item" href="{% url 'list_usergroups' %}">Groups list</a></li>
+            <li><a class="dropdown-item" href="{% url 'list_institutions' %}">Istitutions list</a></li>
+          </ul>
+        </li>
+
+</ul>

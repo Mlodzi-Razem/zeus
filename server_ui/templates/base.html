@@ -1,161 +1,60 @@
-{% load i18n %}<!DOCTYPE html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="{{ LANGUAGE_CODE }}"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ LANGUAGE_CODE }}"> <!--<![endif]-->
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}{% endblock %} {% trans "Zeus Electronic Voting" %}</title>
     <meta charset="utf-8">
-    {% block meta_block %}{% endblock %}
+    <title>{% block title %}{% endblock %} – Zeus</title>
 
-    <!--[if lt IE 8]>
-    <link href="/static/zeus/stylesheets/general_foundicons_ie7.css" media="screen" rel="stylesheet" type="text/css" />
-    <![endif]-->
-    <!--foundation styles and js-->
-    <link rel="shortcut icon" href="/static/zeus/favicon.ico">
-    <link rel="stylesheet" href="/static/zeus/stylesheets/app.css?20122410">
-    <link rel="stylesheet" href="/static/zeus/stylesheets/general_foundicons.css">
-    <link rel="stylesheet" href="/static/zeus/stylesheets/ui-lightness/jquery-ui-1.8.23.custom.css">
-    <script src="/static/zeus/javascripts/foundation/modernizr.foundation.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.js"></script>
-    <link href='https://fonts.googleapis.com/css?family=Didact+Gothic&amp;subset=latin,greek' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block css %}
-    {% endblock %}
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script src="/static/zeus/javascripts/jquery.json.min.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.foundation.reveal.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.foundation.forms.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.foundation.buttons.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.foundation.tabs.js"></script>
-    <script src="/static/zeus/javascripts/foundation/jquery.foundation.navigation.js"></script>
-    <script src="/static/zeus/javascripts/jquery-ui-1.8.23.custom.min.js"></script>
-    <script src="/static/zeus/javascripts/common.js"></script>
+    <!-- App overrides -->
+    <link href="{% static 'css/app.css' %}" rel="stylesheet">
 
-    {% block js %}
-    {% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
 
-    {% block extra-head %}{% endblock %}
-    <script>
-    var init_form_unload_handler = function(){
-      window.FORM_DATA = null;
-      $(window).on('beforeunload',function(){
-        if (FORM_DATA !== $("form").serialize()){
-          if (!window.FORM_SUBMIT) {
-          return "{% trans "Form data have changed!" %}"
-            }
-          }
-        });
-     $(document).ready(function(){
-     window.FORM_DATA = $("form").serialize();
-    $("form").on("submit", function(){
-      window.FORM_SUBMIT = true;
-    });
-     });
-     }
-      $(document).ready(function(){
-        if ($("form[data-protect=1]").length > 0) {
-            init_form_unload_handler();
-        }
-        $(document).foundationCustomForms();
-        $(document).foundationButtons();
-        $(document).foundationTabs();
-        $(document).foundationNavigation();
-      });
-    </script>
-  </head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">Zeus</a>
 
-  <body class="admin {% block page_css %}{% endblock %}">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    
-    <div class="bg-wrapper">
-        <div id="wrapper" class="row">
-                <div class="twelve columns header">
-            {% if election %}
-            <a href="{% url "election_index" election.uuid %}">
-                {% else %}
-                <a href="{% url "home" %}">
-                    {% endif %}
-            </a>
-            <div id="banner">
-                <div class="lang-menu">
-                    {% include "lang_select.html" %}
-                </div>
-                <h1>{% trans "Zeus Electronic Voting" %}</h1>
-            </div>
-            {% include "user_section.html" %}
-            {% block head_subtitle %}
-            {% endblock %}
-        </div>
-      </div>
-
-      <div id="page" class="row">
-        <div class="columns twelve">
-          <div id="progress_div">
-            {% block page_top %}
-            <dl class="tabs">
-              {% block tabs_menu %}{% endblock %}
-            </dl>
-            {% block extra_menu %}
-                {% include "_election_poll_admin_actions.html" %}
-            {% endblock %}
-            {% endblock %}
-            {% if messages %}
-            <div class="messages">
-              {% for message in messages %}
-              <div class="label medium {{ message.tags }}">{{ message }}</div>
-              {% endfor %}
-              <br />
-            </div>
-            {% endif %}
-          </div>
-          <div id="contentbody">
-            {% block content %}{% endblock %}
-          </div>
-        </div>
-      </div>
-      <div id="footer" class="row">
-        <div class="columns twelve">
-          <span style="float:right;">
-            {% if settings.FOOTER_LOGO %}
-            <img src="/static/footer-logo.gif" alt="Zeus logo" /> | 
-            {% endif %}
-            <a href="{% url "terms" %}">{% trans "Terms of use" %}</a>
-          </span>
-          {% if user and user.is_admin %}
-          {% trans "You are logged in as election administrator" %}: {{ user.display_html_small|safe }}
-          <a href="{% url "logout" %}">{% trans "logout" %}</a> |
-          <a href="{% url "admin_home" %}">{% trans "manage" %}</a> 
-          {% if user.is_manager or user.is_superadmin %}
-          | <a href={% url "list_users" %}>{% trans "accounts" %}</a>
-          {% endif %}
-              {% if user.user_type == "password" %}
-              | <a href="{% url "change_password" %}">{% trans "change password" %}</a>
-              {% endif %}
-              <br />
-
-          {% else %}
-          {% if voter %}
-	  {% trans "You are logged in as voter" %} <u>{{ voter.voter_surname }} {{voter.voter_name}}</u>:
-	  <u>{{voter.poll.name_display}}</u> | 
-          <a onclick="return confirm('Επιθυμείτε να αποσυνδεθείτε;')"
-            href="{{settings.SECURE_URL_HOST}}{% url "logout" %}">{% trans "logout" %}</a>
-          {% else %}
-          {% if trustee %}
-	  {% trans "You are logged in as trustee" %} <u>{{trustee.name}}</u>:
-	  <u>{{ election.name }}</u>.
-	  <a href="{{settings.SECURE_URL_HOST}}{% url "logout" %}">{% trans "Logout" %}</a>
-          {% else %}
-	  <a href="{{settings.SECURE_URL_HOST}}{% url "login" %}">{% trans "Login" %}</a>
-          {% endif %}
-          {% endif %}
-          <br />
-          {% endif %}
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      {% include "zeus/_menu_partial.html" %}
+      {% if user and user.is_admin %}
+        {% include "_admin_index_menu.html" %}
+      {% endif %}
+      <ul class="navbar-nav ms-auto">
+        {% if user and user.is_admin %}
+        <li class="nav-item">
+          <a class="nav-link disabled">{{ user.user_id }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        {% endif %}
+      </ul>
     </div>
-    </div>
-    </div>
-    {% block reveals %}
-    {% endblock %}
+  </div>
+</nav>
+
+{% block extra_nav %}{% endblock %}
+
+<main class="container my-4">
+    {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

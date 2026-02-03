@@ -1,52 +1,65 @@
 {% extends "server_ui/templates/base.html" %}
 {% load i18n %}
 
-{% block tabs_menu %}
-{% include "zeus/_menu_partial.html" %}
-{% endblock %}
-
 {% block content %}
 <div class="row">
-  <div class="columns twelve">
-    <h4>{% trans "Elections" %}</h4>
-    {% block present-elections-list %}
-        <table class="info-table reports-table" id="elections-table">
-            <thead>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Application start" %}</th>
-                <th>{% trans "Application end" %}</th>
-                <th>{% trans "Voting start" %}</th>
-                <th>{% trans "Voting end" %}</th>
-                <th>{% trans "Send application" %}</th>
-                <th>{% trans "Presentations" %}</th>
-            </thead>
-            <tbody>
-                {% for election in elections %}
+    <div class="col-12">
+
+        <h4>{% trans "Elections" %}</h4>
+
+        {% block present-elections-list %}
+        <div class="table-responsive">
+                <table class="table table-striped table-hover" id="elections-table">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{election.name}}</td>
-                        <td>{{election.applications_starts_at|date:"Y-m-d H:i"}}</td>
-                        <td>{{election.applications_ends_at|date:"Y-m-d H:i"}}</td>
-                        <td>{{election.voting_starts_at|date:"Y-m-d H:i"}}</td>
-                        <td>{{election.voting_ends_at|date:"Y-m-d H:i"}}</td>
-                        <td>
-                            {% if election.applications_starts_at.timestamp <= now and now <= election.applications_ends_at.timestamp %}
-                                <a href="/elections/{{ election.uuid }}/form">
-                                    {% trans "Send application" %}
+                        <th>{% trans "Name" %}</th>
+                        <th class="d-none d-xl-table-cell">{% trans "Application start" %}</th>
+                        <th class="d-none d-lg-table-cell">{% trans "Application end" %}</th>
+                        <th class="d-none d-lg-table-cell">{% trans "Voting start" %}</th>
+                        <th class="d-none d-lg-table-cell">{% trans "Voting end" %}</th>
+                        <th>{% trans "Send application" %}</th>
+                        <th>{% trans "Presentations" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for election in elections %}
+                        <tr>
+                            <td>{{ election.name }}</td>
+                            <td class="d-none d-xl-table-cell">{{ election.applications_starts_at|date:"Y-m-d H:i" }}</td>
+                            <td class="d-none d-lg-table-cell">{{ election.applications_ends_at|date:"Y-m-d H:i" }}</td>
+                            <td class="d-none d-lg-table-cell">{{ election.voting_starts_at|date:"Y-m-d H:i" }}</td>
+                            <td class="d-none d-lg-table-cell">{{ election.voting_ends_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                {% if election.applications_starts_at.timestamp <= now and now <= election.applications_ends_at.timestamp %}
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{% url 'election_form' election.uuid %}">
+                                        {% trans "Send application" %}
+                                    </a>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {% trans "Applications closed" %}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   href="{% url 'election_presentations' election.uuid %}">
+                                    {% trans "Presentations" %}
                                 </a>
-                            {% else %}
-                                {% trans "Applications closed" %}
-                            {% endif %}
-                        </td>                        
-                        <td><a href="/elections/{{election.uuid}}/presentations">{% trans "Presentations" %}</a></td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan=7>{% trans "No results found" %}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endblock %}
-  </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">
+                                {% trans "No results found" %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endblock %}
+
+    </div>
 </div>
 {% endblock %}

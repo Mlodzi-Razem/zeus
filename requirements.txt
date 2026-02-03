@@ -177,3 +177,5 @@ markdown
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
+django-crispy-forms
+crispy-bootstrap5

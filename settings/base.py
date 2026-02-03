@@ -138,6 +138,8 @@ INSTALLED_APPS = [
     'zeus',
     'server_ui',
     'account_administration',
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -369,3 +371,6 @@ TRUSTEE_SESSION_AGE = 2 * 60 * 60
 USER_SESSION_AGE = 14 * 24 * 60 * 60
 
 SESSION_COOKIE_AGE = USER_SESSION_AGE
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

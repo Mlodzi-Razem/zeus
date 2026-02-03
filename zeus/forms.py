@@ -1166,6 +1166,11 @@ class ApplicationForm(forms.ModelForm):
             'group': _("Group"),
             'presentation': _("Presentation"),
         }
+        widgets = {
+            'presentation': forms.Textarea(attrs={
+                'placeholder': _('Presentation can be formated in markdown. You can find more info on markdown formating below.')
+            }),
+        }
 
     def __init__(self, *args, **kwargs):
         self.election = kwargs.pop('election', None)

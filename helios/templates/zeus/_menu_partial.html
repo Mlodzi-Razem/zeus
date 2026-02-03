@@ -1,7 +1,13 @@
 {% load i18n %}
-<dd id="" class="{% if menu_active == "elections" %}active{% endif %}"><a 
-  href="{% url "home" %}">{% trans "Elections" %}</a></dd>
-<dd id="" class="{% if menu_active == "archive" %}active{% endif %}"><a 
-  href="{% url "site_archive" %}">{% trans "Archive" %}</a></dd>
-<dd id="" class="{% if menu_active == "contact" %}active{% endif %}"><a 
-  href="{% url "site_contact" %}">{% trans "Contact" %}</a></dd>
+
+<ul class="navbar-nav me-auto">
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">{% trans "Elections" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/archive/' %}active{% endif %}" href="{% url 'site_archive' %}">{% trans "Archive" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'site_contact' %}">{% trans "Contact" %}</a>
+  </li>
+</ul>

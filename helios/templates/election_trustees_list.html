@@ -6,101 +6,71 @@
 {% endblock %}
 {% block content %}
 
-<p>
-{% blocktrans %}
-The trustees below are responsible for the decryption of the ballots
-{% endblocktrans %}
-</p>
+<h4>Trustees</h4>
 
 {% if not trustees|length %}
 {% else %}
 {% for t in trustees %}
-    <div class="trustee-entry">
-        <h5>
-        <span class="name">{{ t.name }}</span>
-        {% if admin %}
-            <br /><span style="font-size:0.8em; color:#aaa">{{ t.email }}</span>
-            <br/>
-            {% if t.public_key_hash %}
-                <span class="hash-title">{% trans "Trustee election identifier" %}: </span>
-                <tt style="font-size:0.8em;">{{t.public_key_hash}}</tt>
-                {% if not t.last_verified_key_at %}
-                    <span class="label alert">{% trans "Trustee key not verified" %}</span>
-                {% else %}
-                    <span class="label success">
-                        {% trans "key verified" %}
-                    </span>
-                    {% if t.partial_decryptions.all %}
-
-                        {% if t.partial_decryptions.all.count == election.polls.all.count %}
-                            <span class="label success">
-                        {% else %}
-                            <span class="label warning">
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                {{ t.name }}
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">{% trans "Email" %}: {{ t.email }}</li>
+                        {% if admin %}
+                            {% if t.public_key_hash %}
+                                <li class="list-group-item">{% trans "Trustee election identifier" %}: {{t.public_key_hash}}</li>
+                                {% if not t.last_verified_key_at %}
+                                    <li class="list-group-item">{% trans "Trustee key not verified" %}</li>
+                                {% else %}
+                                    <li class="list-group-item">{% trans "Trustee key verified" %}</li>
+                                    {% if t.partial_decryptions.all %}
+                                        <li class="list-group-item">{% trans "Polls decrypted" %}: {{t.partial_decryptions.all.count}}/{{election.polls.all.count}}</li>
+                                    {% else %}
+                                        {% if election.any_poll_feature_can_partial_decrypt %}
+                                            <li class="list-group-item">{% trans "No polls decrypted" %}</li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <li class="list-group-item">{% trans "No trustee election key set" %}</li>
+                            {% endif %}
+                            {% if election.feature_can_send_trustee_email %}
+                                <li class="list-group-item">{% trans "Trustee last notified at" %}: {{ t.last_notified_at }}</li>
+                            {% endif %}
+                            {% if election.feature_can_send_trustee_email and t.last_verified_key_at %}
+                                <li class="list-group-item">{% trans "Trustee key last verified at" %}: {{ t.last_verified_key_at }}</li>
+                            {% endif %}
+                            {% if admin and election.feature_display_decryption_factors_status %}
+                                {% if t.decryption_factors %}
+                                    <li class="list-group-item">{% trans "Trustee completed partial decryption" %}</li>
+                                {% else %}
+                                    <li class="list-group-item">{% trans "Pending partial decryption from trustee" %}</li>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
-
-                        {% trans "Polls decrypted" %}
-                        {{t.partial_decryptions.all.count}}/{{election.polls.all.count}}
-                        </span>
-                    {% else %}
-                        {% if election.any_poll_feature_can_partial_decrypt %}
-                            <span class="label alert">
-                                {% trans "No polls decrypted" %}
-                            </span>
+                    </ul>
+                </div>
+                <div style="padding-top: 8px;">
+                    {% if admin %}
+                        {% if election.feature_can_send_trustee_email %}
+                            <a href="{% url "election_trustee_send_url" election.uuid t.uuid %}" class="btn btn-primary">{% trans "Send trustee login url" %}</a>
+                        {% endif %}
+                        {% if election.feature_delete_trustee %}
+                            <a href="{% url "election_trustee_delete" election.uuid t.uuid %}" class="btn btn-primary">{% trans "Delete trustee" %}</a>
                         {% endif %}
                     {% endif %}
-                {% endif %}
-            {% else %}
-                <span class="label alert">{% trans "No trustee election key set" %}.</span>
-            {% endif %}
-
-            <div class="trustee-actions">
-            {% if election.feature_can_send_trustee_email %}
-                <span class="send-login-form">
-                {% url "election_trustee_send_url" election.uuid t.uuid as mail_url %}
-                {% trans "Send trustee login url" as label %}
-                {% small_confirm_action label mail_url %}
-                </span>
-            {% endif %}
-
-            {% if election.feature_delete_trustee %}
-                <span class="delete-trustee-form">
-                {% url "election_trustee_delete" election.uuid t.uuid as delete_url %}
-                {% trans "Delete trustee" as label %}
-                {% small_confirm_action label delete_url trustee_remove_confirm "" "POST" "delete-trustee alert" inline=1%}
-                </span>
-            {% endif %}
-        {% endif %}
+                </div>
+            </div>
         </div>
-        {% if admin %}
-            {% if election.feature_can_send_trustee_email %}
-                <p class="last-notified">{% trans "Trustee last notified at" %} <span>{{ t.last_notified_at }}</span></p>
-            {% endif %}
-            {% if election.feature_can_send_trustee_email and t.last_verified_key_at %}
-                <p class="last-notified">{% trans "Trustee key last verified at" %} <span>{{ t.last_verified_key_at }}</span></p>
-            {% endif %}
-        {% endif %}
-        </h5>
-        {% if admin and election.feature_display_decryption_factors_status %}
-            <p>
-                {% if t.decryption_factors %}
-                    <span class="success label">
-                        {% trans "Trustee completed partial decryption" %}
-                    </span>
-                {% else %}
-                    <span class="alert label">
-                    {% trans "Pending partial decryption from trustee" %}
-                    </span>
-                {% endif %}
-            </p>
-        {% endif %}
-        </li>
-        {% if not forloop.last %}
-            {% if admin %}
-                <br />
-            {% endif %}
-        {% endif %}
     </div>
-    {% endfor %}
-    </ul>
+</div>
+{% endfor %}
 {% endif %}
 {% endblock %}

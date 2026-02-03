@@ -1,24 +1,39 @@
 {% extends "server_ui/templates/base.html" %}
 {% load i18n %}
-
-{% block tabs_menu %}
-{% include "zeus/_menu_partial.html" %}
-{% endblock %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<h4>{% trans "Application for" %} {{ election.name }}</h4>
+<div class="container mt-4">
+  <h4 class="mb-4">{% trans "Application for" %} {{ election.name }}</h4>
 
-<form method="post">
-  {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
 
-  {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-      {{ form.non_field_errors }}
+    {{ form|crispy }}
+
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+  </form>
+
+  <div class="accordion" id="accordionExample" style="padding-top: 20px;">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          {% trans "More markdown info" %}
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          {% trans "The form above uses markdown formating. Markdown is a is a lightweight markup language for creating formatted text using a plain-text editor. You can check makdown syntax " %}
+          <a href="https://www.markdownguide.org/basic-syntax/">{% trans "here" %}</a>.
+        </div>
+      </div>
     </div>
-  {% endif %}
-
-  {{ form.as_p }}
-
-  <button type="submit">{% trans "Submit" %}</button>
-</form>
+  </div>
+</div>
 {% endblock %}

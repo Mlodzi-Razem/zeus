@@ -7,33 +7,37 @@
 
 {% block content %}
 <div class="row">
-  <div class="columns twelve">
+  <div class="col-12">
     <h4>{% trans "Archive" %}</h4>
     {% block past-elections-list %}
-        <table class="info-table reports-table" id="elections-table">
-            <thead>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Voting start" %}</th>
-                <th>{% trans "Voting end" %}</th>
-                <th>{% trans "Results" %}</th>
-                <th>{% trans "Presentations" %}</th>
-            </thead>
-            <tbody>
-                {% for election in elections %}
+        <div class="table-responsive">
+                <table class="table table-striped table-hover" id="elections-table">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{election.name}}</td>
-                        <td>{{election.voting_starts_at|date:"Y-m-d H:i"}}</td>
-                        <td>{{election.voting_ends_at|date:"Y-m-d H:i"}}</td>
-                        <td><a href="/elections/{{election.uuid}}/results">{% trans "Results" %}</a></td>
-                        <td><a href="/elections/{{election.uuid}}/presentations">{% trans "Presentations" %}</a></td>
+                        <th scope="col">{% trans "Name" %}</th>
+                        <th scope="col">{% trans "Voting start" %}</th>
+                        <th scope="col">{% trans "Voting end" %}</th>
+                        <th scope="col">{% trans "Results" %}</th>
+                        <th scope="col">{% trans "Presentations" %}</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan=7>{% trans "No results found" %}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for election in elections %}
+                        <tr>
+                            <td>{{ election.name }}</td>
+                            <td>{{ election.voting_starts_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ election.voting_ends_at|date:"Y-m-d H:i" }}</td>
+                            <td><a href="/elections/{{ election.uuid }}/results" class="btn btn-sm btn-primary">{% trans "Results" %}</a></td>
+                            <td><a href="/elections/{{ election.uuid }}/presentations" class="btn btn-sm btn-secondary">{% trans "Presentations" %}</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">{% trans "No results found" %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endblock %}
   </div>
 </div>

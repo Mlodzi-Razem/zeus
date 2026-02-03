@@ -2,8 +2,9 @@
 
 <div class="admin-status">
   <div class="panel">
-    <h4>{% trans "Election status" %}</h4>
-    {{ election.status_display }}
+    <h5>{% trans "Election status" %}</h5>
+    <div class="alert alert-primary">{{ election.status_display }}</div>
+    
 	{% if election.feature_can_close_remote_mixing %}
 	<div class="subpael" style="margin-top: 20px">
     {% blocktrans %}Use the following URL to append additional mixes{% endblocktrans %}
@@ -21,54 +22,147 @@
   </div>
 </div>
 
-<div class="clearfix admin-actions">
-{% if not election.feature_canceled and not election.feature_frozen and not election.any_poll_feature_validate_create_running %}
-{% trans "Freeze election" as label %}
 {% if election.feature_can_freeze %}
-  {% reveal_action label "#freeze-admin-action" "" "freeze-election" %}
-{% else %}
-  {% reveal_action label "#freeze-admin-action" "" "freeze-election disabled" %}
-  {% endif %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#freezeModal">
+  {% trans "Freeze election" %}
+</button>
 {% endif %}
+
+<div class="modal fade" id="freezeModal" tabindex="-1" aria-labelledby="freezeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="freezeModalLabel">{% trans "Freeze election" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if election_issues_list or polls_issues_list %}
+          {% trans "Please resolve the following issues in order to be able to freeze the election" %}
+          {% include "_freeze_issues.html" %}
+          {% if not election.trustees.count > 1 %}
+            <div class="alert alert-primary">{% trans "No trustees are set for the election." %}</div>
+          {% endif %}
+        {% endif %}
+        {% blocktrans %}The election is about to be frozen.
+        It will be made ready for voting,
+        and most changes will not be possible.
+        Are you certain?{% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="{% url "election_freeze" election.uuid %}" method="POST" class="action-form">
+          {% csrf_token %}
+          <input type="submit" value="{% trans "Confirm freeze" %}"
+            class="btn btn-primary" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="clearfix admin-actions">
 
 {% if election.feature_can_close %}
-{% trans "Close election" as label %}
-{% reveal_action label "#close-admin-action" "" "close-election"%}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#closeModal">
+  {% trans "Close election" %}
+</button>
 {% endif %}
+
+<div class="modal fade" id="closeModal" tabindex="-1" aria-labelledby="closeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="closeModalLabel">{% trans "Close election" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% trans "Election close message" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="{% url "election_close" election.uuid %}" method="POST" class="action-form">
+          {% csrf_token %}
+          <input type="submit" value="{% trans "Confirm election close" %}"
+            class="btn btn-primary" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% if election.feature_can_close_remote_mixing %}
-{% trans "Close mixing" as label %}
-{% reveal_action label "#close-mixing-admin-action" "" "close-mixing"%}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#closeMixingModal">
+  {% trans "Close mixing" %}
+</button>
 {% endif %}
 
+<div class="modal fade" id="closeMixingModal" tabindex="-1" aria-labelledby="closeMixingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="closeMixingModalLabel">{% trans "Close mixing" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% trans "Please confirm." %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="  {% url "election_close_mixing" election.uuid %}" method="POST" class="action-form">
+          {% csrf_token %}
+          <input type="submit" value="{% trans "Confirm close mixing" %}"
+            class="btn btn-primary" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% if election.feature_can_cancel %}
-{% trans "Cancel election" as label %}
-{% reveal_action label "#cancel-admin-action" cls="alert cancel-election" %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cancelModal">
+  {% trans "Cancel election" %}
+</button>
 {% endif %}
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cancelModalLabel">{% trans "Close election" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url "election_cancel" election.uuid %}" method="POST" class="action-form">
+        <div class="modal-body">
+          {% trans "Election cancel message" %}<br/>
+          <div class="form-floating" style="padding-top: 8px">
+            <textarea name="cancel_msg" class="form-control cancel-msg" placeholder="Leave a comment here" id="floatingTextarea" style="height: 200px"></textarea>
+            <label for="floatingTextarea">{% trans "Cancel reason" %}</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            {% csrf_token %}
+            <input type="submit" value="{% trans "Confirm election cancel" %}"
+              class="btn btn-primary" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% if election.feature_compute_results_finished %}
 {% with election.get_module as module %}
   {% if module.pdf_result %}
-    <a href="{% url "election_pdf_results" election.uuid election.short_name LANGUAGE_CODE %}">{% trans "Save results" %} (PDF)</a>
-<br /><br />
+    <a class="btn btn-primary" href="{% url "election_pdf_results" election.uuid election.short_name LANGUAGE_CODE %}">{% trans "Save results" %} (PDF)</a>
   {% endif %}
   {% if module.csv_result%}
-    <a href="{% url "election_csv_results" election.uuid election.short_name LANGUAGE_CODE %}">{% trans "Save results" %} (CSV)</a>
-    <br />
-    <br />
-    <a href="{% url "election_zip_results" election.uuid election.short_name LANGUAGE_CODE%}">
-{% trans "Save results" %} (ZIP)</a>
-<br /><br />
+    <a class="btn btn-primary" href="{% url "election_csv_results" election.uuid election.short_name LANGUAGE_CODE %}">{% trans "Save results" %} (CSV)</a>
+    <a class="btn btn-primary" href="{% url "election_zip_results" election.uuid election.short_name LANGUAGE_CODE%}">{% trans "Save results" %} (ZIP)</a>
   {% endif %}
   {% if module.election_results_partial %}
     {% include module.election_results_partial %}
   {% endif %}
 {% endwith %}
-{% endif %}
-{% if election.feature_can_recompute_results and user.is_superadmin %}
-  {% trans "Recompute results" as label %}
-  <div style="margin-top: 40px">
-    {% reveal_action label "#recompute-results-admin-action" cls="secondary recompute-results" %}
-  </div>
 {% endif %}
 </div>

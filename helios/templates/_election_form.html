@@ -1,19 +1,23 @@
 {% load i18n %}
-<div class="columns twelve">
-{% if error %}
-<div class="panel alert">
-    {{ error }}
-</div>
-{% endif %}
-  
-  <form data-protect="1" class="prettyform" action="" method="POST" id="create_election_form">
-    <table class="pretty">
-      {% with form=election_form %}
-      {% include "foundation_form.html" %}
-      {% endwith %}
-     </table>
-  <div>
-  <input class="button" type="submit" value="{% trans "Save" %}" id="next_button" />
+{% load crispy_forms_tags %}
+
+<div class="container mt-4">
+  {% if error %}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <form data-protect="1" method="POST" id="create_election_form">
+    {% csrf_token %}
+    {{ election_form|crispy }}
+
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary" id="next_button">
+        {% trans "Save" %}
+      </button>
+    </div>
+  </form>
 </div>
 
 <script>
@@ -21,23 +25,25 @@ $(function() {
   $(".datepicker[readonly!=readonly]").datepicker({ dateFormat: 'yy-mm-dd' });
   $("[readonly]").addClass("field-readonly");
   $("select[readonly] option[selected!=selected]").remove();
-  $("select[name=election_module]").on("change", function(e) {
+
+  $("select[name=election_module]").on("change", function() {
     updateDeptsVisible();
   });
 
   function updateDeptsVisible() {
     var module = $("select[name=election_module]").val();
-    var depts = $("label[for=id_departments]").parent();
-    if (depts.hasClass("error")) { depts.show(); return; }
-    if (module == "stv") {
+    var depts = $("label[for=id_departments]").closest(".mb-3"); // Bootstrap wrapper
+    if (depts.hasClass("error")) { 
+      depts.show(); 
+      return; 
+    }
+    if (module === "stv") {
       depts.show();
     } else {
       depts.hide();
     }
   }
+
   updateDeptsVisible();
 });
 </script>
-  </form>
-</div>
-

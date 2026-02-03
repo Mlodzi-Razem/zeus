@@ -1,9 +1,6 @@
 {% extends "election_page.html" %}{% load i18n %}
-{% load zeus_tags %}
-{% block title %}{{election.name}}: {% trans "Election Polls" %}{% endblock %}
-{% block tabs_menu %}
-{% include "_election_view_menu.html" %}
-{% endblock %}
+{% load zeus_tags crispy_forms_tags %}
+
 {% block content %}
 {% if election.feature_can_add_poll or poll %}
 
@@ -18,15 +15,19 @@
         <input type="submit" class="button small" value="{% trans "Save" %}" />
     </form>
 {% else %}
-    <form data-protect="1" class="prettyform" action="" method="POST">
-        <table class="pretty">
-        {% with form=form %}
-            {% include "foundation_form.html" %}
-        {% endwith %}
-        </table>
-        <a class="button" href="{% url "election_polls_list"  election.uuid %}">
-        {% trans "Cancel" %}</a>
-        <input class="button" type="submit" value="{% trans "Save" %}"/>
+    <form data-protect="1" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="mt-3">
+            <a class="btn btn-secondary"
+            href="{% url "election_polls_list" election.uuid %}">
+                {% trans "Cancel" %}
+            </a>
+            <button type="submit" class="btn btn-primary">
+                {% trans "Save" %}
+            </button>
+        </div>
     </form>
 {% endif %}
 
@@ -34,36 +35,30 @@
 var oauth2_elems = $("input[id^=id_oauth2]:not(#id_oauth2_thirdparty), select[id^=id_oauth2]");
 
 function show_oauth2_elems(time){
-    oauth2_elems.parent().show(time);
-    oauth2_elems.parent().next().show(time);
+    oauth2_elems.closest('.mb-3').show(time);
 }
 
 function hide_oauth2_elems(time){
-    oauth2_elems.parent().hide(time);
-    oauth2_elems.parent().next().hide(time);
+    oauth2_elems.closest('.mb-3').hide(time);
 }
 
 var jwt_elems = $("textarea[id^=id_jwt_public_key],input[id^=id_jwt]:not(#id_jwt_auth)")
 var shibboleth_elems = $("textarea[id^=id_shibboleth_constraints],input[id^=id_shibboleth]:not(#id_shibboleth_auth)");
 
 function show_jwt_elems(time){
-    jwt_elems.parent().show(time);
-    jwt_elems.parent().next().show(time);
-}
-
-function show_shibboleth_elems(time){
-    shibboleth_elems.parent().show(time);
-    shibboleth_elems.parent().next().show(time);
-}
-
-function hide_shibboleth_elems(time){
-    shibboleth_elems.parent().hide(time);
-    shibboleth_elems.parent().next().hide(time);
+    jwt_elems.closest('.mb-3').show(time);
 }
 
 function hide_jwt_elems(time){
-    jwt_elems.parent().hide(time);
-    jwt_elems.parent().next().hide(time);
+    jwt_elems.closest('.mb-3').hide(time);
+}
+
+function show_shibboleth_elems(time){
+    shibboleth_elems.closest('.mb-3').show(time);
+}
+
+function hide_shibboleth_elems(time){
+    shibboleth_elems.closest('.mb-3').hide(time);
 }
 
 function collect_urls(){
@@ -139,9 +134,6 @@ $(function(){
         };
         reader.readAsText(input.files[0]);
     });
-
-
-    $(".fieldset-auth").next("br").remove();
 
     $("#id_oauth2_thirdparty").change(function(){
         if ($("#id_oauth2_thirdparty").prop('checked')){
