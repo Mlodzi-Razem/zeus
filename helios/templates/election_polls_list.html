@@ -91,11 +91,11 @@
         </div>
       </td>
     <tr>
-        <td class="remote-login-info" colspan=7>
-    {% if poll.remote_login %}
+        {% if poll.remote_login %}
+            <td class="remote-login-info" colspan=7>
             {{poll.remote_login_display}}
-    {% endif %}
-        </td>
+            </td>
+        {% endif %}
     </tr>
     </tr>
     {% endfor %}
@@ -119,11 +119,11 @@
 {% endif %}
 </table>
 {% endif %}
+</div>
 {% if election.feature_can_add_poll %}
 <a class="btn btn-primary" href="{% url "election_polls_add" election.uuid %}">
 {% trans "Add poll" %}</a>
 <a class="btn btn-primary" href="{% url "election_polls_generate" election.uuid %}">
 {% trans "Generate polls from applications" %}</a>
 {% endif %}
-</div>
 {% endblock %}

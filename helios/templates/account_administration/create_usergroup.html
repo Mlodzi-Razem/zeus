@@ -1,11 +1,8 @@
 {% extends TEMPLATE_BASE %} 
 
-{% load remember_filters %}
+{% load remember_filters crispy_forms_tags %}
 {% load i18n %}
 
-{% block tabs_menu%}
-{% include "account_administration/nav.html"%}
-{% endblock %}
 
 {% block content %}
 <style>
@@ -16,12 +13,10 @@ ul#id_election_types:after { content: ""; clear:both; display: table }
 {{messages.error}}
 <form action='' method='POST'>
 {% csrf_token %}
-{{form}}
-<br>
-<br>
+{{form|crispy}}
+
 <label id="sub_button"></label>
-<input id="sub_button" type='submit' class="button tiny" value={% trans "Save" %}>
+<input id="sub_button" type='submit' class="btn btn-secondary" value={% trans "Save" %}>
 </form>
-</br>
-</br>
+
 {% endblock content%}

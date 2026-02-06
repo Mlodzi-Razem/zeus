@@ -32,158 +32,59 @@
 {% endif %}
 
 <script>
-var oauth2_elems = $("input[id^=id_oauth2]:not(#id_oauth2_thirdparty), select[id^=id_oauth2]");
+const jwt = document.getElementById("id_jwt_auth");
+const jwt_file = document.getElementById("div_id_jwt_file");
+const jwt_issuer = document.getElementById("div_id_jwt_issuer");
+const jwt_key = document.getElementById("div_id_jwt_public_key");
 
-function show_oauth2_elems(time){
-    oauth2_elems.closest('.mb-3').show(time);
+function toggleJwtFields() {
+  const display = jwt.checked ? "block" : "none";
+  jwt_file.style.display = display;
+  jwt_issuer.style.display = display;
+  jwt_key.style.display = display;
 }
 
-function hide_oauth2_elems(time){
-    oauth2_elems.closest('.mb-3').hide(time);
+jwt.addEventListener("change", toggleJwtFields);
+
+toggleJwtFields();
+
+const oauth = document.getElementById("id_oauth2_thirdparty");
+const oauth_type = document.getElementById("div_id_oauth2_type");
+const oauth_client = document.getElementById("div_id_oauth2_client_type");
+const oauth_secret = document.getElementById("div_id_oauth2_client_secret");
+const oauth_code = document.getElementById("div_id_oauth2_code_url");
+const oauth_exchange = document.getElementById("div_id_oauth2_exchange_url");
+const oauth_confirm = document.getElementById("div_id_oauth2_confirmation_url");
+const oauth_clientid = document.getElementById("div_id_oauth2_client_id");
+
+function toggleOauthFields() {
+  const display = oauth.checked ? "block" : "none";
+  oauth_type.style.display = display;
+  oauth_client.style.display = display;
+  oauth_secret.style.display = display;
+  oauth_code.style.display = display;
+  oauth_exchange.style.display = display;
+  oauth_confirm.style.display = display;
+  oauth_clientid.style.display = display;
 }
 
-var jwt_elems = $("textarea[id^=id_jwt_public_key],input[id^=id_jwt]:not(#id_jwt_auth)")
-var shibboleth_elems = $("textarea[id^=id_shibboleth_constraints],input[id^=id_shibboleth]:not(#id_shibboleth_auth)");
+oauth.addEventListener("change", toggleOauthFields);
 
-function show_jwt_elems(time){
-    jwt_elems.closest('.mb-3').show(time);
+toggleOauthFields();
+
+
+const shibboleth = document.getElementById("id_shibboleth_auth");
+const shibboleth_constraints = document.getElementById("div_id_shibboleth_constraints");
+
+function toggleShibbolethFields() {
+  const display = shibboleth.checked ? "block" : "none";
+  shibboleth_constraints.style.display = display;
 }
 
-function hide_jwt_elems(time){
-    jwt_elems.closest('.mb-3').hide(time);
-}
+shibboleth.addEventListener("change", toggleShibbolethFields);
 
-function show_shibboleth_elems(time){
-    shibboleth_elems.closest('.mb-3').show(time);
-}
+toggleShibbolethFields();
 
-function hide_shibboleth_elems(time){
-    shibboleth_elems.closest('.mb-3').hide(time);
-}
-
-function collect_urls(){
-    
-    var urls = {};
-    var types = ["google", "facebook"];
-    var subtypes = ["code", "exchange", "confirmation"]
-    for (var i = 0; i < types.length; i++) {
-        type = types[i]
-        urls_arr = []
-        for (var j = 0; j < subtypes.length; j++) {
-            subtype = subtypes[j]
-            var value = $("#id_"+type+"_"+subtype+"_url").val()
-            urls_arr.push(value)
-        }
-        urls[type] = urls_arr;
-    }
-    urls['other'] = ['', '', '']
-    return urls
-    }
-
-function set_initial_values(urls){
-    if ("{{poll}}" == "None"){
-        var code_field = $("#id_oauth2_code_url")
-        var exchange_field = $("#id_oauth2_exchange_url")
-        var confirmation_field = $("#id_oauth2_confirmation_url")
-        var type = "google";
-        code_field.val(urls[type][0])
-        exchange_field.val(urls[type][1])
-        confirmation_field.val(urls[type][2])
-    }
-}
-
-$(function(){
-    urls = collect_urls();
-    set_initial_values(urls);
-
-    var jwt_auth = $('#id_jwt_auth');
-
-    if ($("#id_oauth2_thirdparty").prop('checked')){
-        show_oauth2_elems(150);
-        hide_jwt_elems(0);
-        hide_shibboleth_elems(0);
-    }
-    else if($("#id_jwt_auth").prop('checked')){
-        show_jwt_elems(150);
-        hide_oauth2_elems(0);
-        hide_shibboleth_elems(0);
-    }
-    else if ($("#id_shibboleth_auth").prop('checked')) {
-        show_shibboleth_elems(150);
-        hide_jwt_elems(0);
-        hide_oauth2_elems(0);
-    }
-    else{
-        hide_oauth2_elems(150);
-        hide_jwt_elems(0);
-        hide_shibboleth_elems(0);
-    }
-    $("#id_jwt_file").change(function(event){
-        var output = $("#id_jwt_public_key");
-        var input = event.target;
-        reader = new FileReader();
-        reader.onload = function(){
-            text = reader.result;
-            var header = "-----BEGIN RSA PUBLIC KEY-----";
-            if (text.startsWith(header)){
-            output.val(text);
-            }
-            else{
-                alert('Invalid file');
-            }
-        };
-        reader.readAsText(input.files[0]);
-    });
-
-    $("#id_oauth2_thirdparty").change(function(){
-        if ($("#id_oauth2_thirdparty").prop('checked')){
-            hide_jwt_elems(150);
-            hide_shibboleth_elems(150);
-            show_oauth2_elems(150);
-            jwt_auth.prop('checked', false)
-            $("#id_shibboleth_auth").prop('checked', false)
-        }
-        else{
-            hide_oauth2_elems(150);
-        }
-    });
-
-    $("#id_shibboleth_auth").change(function(){
-        if ($("#id_shibboleth_auth").prop('checked')){
-            show_shibboleth_elems(150);
-            $("#id_oauth2_thirdparty").prop("checked", false);
-            hide_oauth2_elems(150);
-            $("#id_jwt_auth").prop("checked", false);
-            hide_jwt_elems(150);
-        } else {
-            hide_shibboleth_elems(150);
-        }
-    });
-
-    $("#id_jwt_auth").change(function(){
-        if ($("#id_jwt_auth").prop('checked')){
-            show_jwt_elems(150)
-            $("#id_shibboleth_auth").prop('checked', false)
-            hide_shibboleth_elems(150);
-            $("#id_oauth2_thirdparty").prop('checked', false)
-            hide_oauth2_elems(150);
-        }
-        else{
-            hide_jwt_elems(150);
-        }
-    });
-
-    $("#id_oauth2_type").change(function(){
-        var type = $(this).val();
-        var code_field = $("#id_oauth2_code_url")
-        var exchange_field = $("#id_oauth2_exchange_url")
-        var confirmation_field = $("#id_oauth2_confirmation_url")
-        code_field.val(urls[type][0])
-        exchange_field.val(urls[type][1])
-        confirmation_field.val(urls[type][2])
-        
-    });
-});
 </script>
 {% endif %}
 {% endblock %}

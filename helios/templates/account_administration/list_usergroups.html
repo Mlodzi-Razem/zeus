@@ -1,19 +1,15 @@
 {% extends TEMPLATE_BASE %}
 
-{% load i18n pagination_tags %}
-{% load remember_filters %}
-
-{% block tabs_menu%}
-{% include "account_administration/nav.html" %}
-{% endblock%}
+{% load i18n %}
 
 {% block content %}
 
-{% autopaginate groups paginate_by %}
-{% paginate %}
 
-<table class="elections">
-  <thead>
+<div class="row">
+  <div class="col-12">
+    <h4>{% trans "Groups" %}</h4>
+<table class="table table-striped table-hover" id="elections-table">
+  <thead class="table-dark">
     <tr>
         <th>{% trans "Name" %}</th>
         <th>{% trans "Election types" %}</td>
@@ -28,7 +24,7 @@
         <td>{{group.election_types_display}}</td>
         <td>{{group.users_count_display}}</td>
         <td>
-            <a href={% url "create_usergroup" %}?edit_id={{group.id}}>
+            <a class="btn btn-secondary" href={% url "create_usergroup" %}?edit_id={{group.id}}>
             {% trans "Edit" %}</a>
         </td>
     </tr>
@@ -39,5 +35,6 @@
     {% endfor %}
   </tbody>
 </table>
-{% paginate %}
+  </div>
+</div>
 {% endblock content %}
