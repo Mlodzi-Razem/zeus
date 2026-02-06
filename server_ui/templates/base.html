@@ -34,15 +34,15 @@
         <li class="nav-item">
           <a class="nav-link disabled">{{ user.user_id }}</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="padding-right: 8px;">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         </li>
         {% else %}
-        <li class="nav-item">
+        <li class="nav-item" style="padding-right: 8px;">
           <a class="nav-link" href="{% url 'login' %}">Login</a>
         </li>
         {% endif %}
-        <li style="padding-left: 8px;">
+        <li class="nav-item">
           <button id="themeToggle" class="btn btn-outline-secondary" >
             <i id="themeIcon" class="bi"></i>
           </button>
